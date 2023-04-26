@@ -1,0 +1,54 @@
+FirstCar = T
+LoadCompensating = false
+
+[Cab]
+BrakeNotchCount = 8
+PowerNotchCount = 4
+
+[MainCircuit]
+RegenerationLimit = 10
+LeverDelay = 0.2
+BrakePriority = true
+
+[Smee]
+MaximumPressure = 498000
+PressureRates = 0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, 1
+LeverDelay = 0.3
+
+[Sap]
+ApplySpeed = 170.664
+ReleaseSpeed = 239.4975
+
+[Bp]
+ApplySpeed = 51.13908
+ReleaseSpeed = 990.2853
+
+[LockoutValve]
+MaximumPressure = 498000
+RegenerationLimit = 11
+
+[Bc]
+ApplyStart = 30000
+ApplyStop = 10000
+ReleaseStart = 30000
+ReleaseStop = 10000
+ApplySpeed = 682.6562
+ReleaseSpeed = 299.3718
+PistonArea = 0.4294958
+
+[Compressor]
+UpperPressure = 845000
+LowerPressure = 700000
+
+[Dynamics]
+MortorcarWeight = 32700
+TrailerWeight = 27000
+MortorcarCount = 1
+TrailerCount = 1
+CarLength = 18
+
+[Passengers]
+Capacity = 125
+
+
+
