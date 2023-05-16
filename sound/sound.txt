@@ -1,0 +1,50 @@
+BveTs Vehicle Sound 3.01:shift_jis
+
+[Run]
+0 = Run0.wav
+1 = Run1.wav
+2 = Run2.wav
+3 = Run3.wav
+4 = Run4.wav
+[Motor]
+0=Motor0.wav
+1=Motor1.wav
+2=Motor2.wav
+3=Motor3.wav
+4=Motor4.wav
+
+[Joint]
+0 = Point.wav
+
+[Brake]
+BcRelease = Air.wav
+BcReleaseFull = Air.wav
+BcReleaseHigh = AirHigh.wav
+Emergency = AirHigh.wav
+
+[Compressor]
+Attack = CpStart.wav
+Loop = CpLoop.wav
+Release = CpEnd.wav
+
+[Horn]
+Primary = horn.wav
+Secondary = horn.wav
+
+[Door]
+openLeft = dooropn.wav
+openRight = dooropn.wav
+CloseLeft = doorcls.wav
+CloseRight = doorcls.wav
+
+
+[Others]
+noise=loop.wav
+
+[Master Controller]
+Up = lb.wav
+Down = lb.wav
+
+[reverser]
+On = lb.wav
+Off= lb.wav

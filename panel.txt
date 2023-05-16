@@ -1,0 +1,128 @@
+BveTs Instrument Panel 2.00
+
+[This]
+Resolution = 1980
+Left = 20
+Top = 20
+Right = 2000
+Bottom = 1000
+DaytimeImage = panel\panel.png
+TransparentColor = #0000FF
+Center = 1017,395
+Origin = 1020,104
+
+[Needle]
+Subject		 = mr
+Location = 1440,881
+DaytimeImage	 = panel\prs_low.png
+Color		 = 999999
+Origin		 = 64, 256
+Layer		 = 8
+Radius		 = 60
+InitialAngle	 = -133
+LastAngle	 = 133
+Minimum		 = 0
+Maximum		 = 1200
+NaturalFreq	 = 271
+DampingRatio	 = 0.300
+
+[Needle]
+Subject		 = bp
+Location = 1440,881
+DaytimeImage	 = panel\prs_up.png
+Color		 = FFFFFF
+Origin		 = 64, 256
+Layer		 = 9
+Radius		 = 60
+InitialAngle	 = -133
+LastAngle	 = 133
+Minimum		 = 0
+Maximum		 = 1200
+NaturalFreq	 = 271
+DampingRatio	 = 0.300
+
+[Needle]
+Subject		 = sap
+Location = 1244,881
+DaytimeImage	 = panel\prs_up.png
+Color		 = FFFFFF
+Origin		 = 64, 256
+Layer		 = 9
+Radius		 = 60
+InitialAngle	 = -133
+LastAngle	 = 133
+Minimum		 = 0
+Maximum		 = 1200
+NaturalFreq	 = 271
+DampingRatio	 = 0.300
+
+[Needle]
+Subject		 = bc
+Location = 1244,881
+DaytimeImage	 = panel\prs_low.png
+Color		 = 999999
+Origin		 = 64, 256
+Layer		 = 8
+Radius		 = 60
+InitialAngle	 = -133
+LastAngle	 = 133
+Minimum		 = 0
+Maximum		 = 1200
+NaturalFreq	 = 271
+DampingRatio	 = 0.300
+
+[Needle];速度計
+Subject = kmph
+Location = 892, 881
+DaytimeImage	 = panel\spd.png
+Color		 = 251f1d
+TransparentColor = 000000
+Origin = 124, 485
+Layer = 9
+Radius		 = 60
+InitialAngle = -115
+LastAngle = 120
+Minimum = 5
+Maximum = 140
+NaturalFreq = 6.3
+DampingRatio = 0.5
+
+[Needle];電流計
+Subject = am
+Location = 691, 881
+DaytimeImage	 = panel\spd.png
+Color		 = 251f1d
+TransparentColor = 000000
+Origin = 124, 485
+Layer = 9
+Radius		 = 60
+InitialAngle = 0
+LastAngle = 400
+Minimum = 0
+Maximum = 600
+NaturalFreq = 6.3
+DampingRatio = 0.5
+
+[PilotLamp]
+Subject = true
+Location = 659, 849
+DaytimeImage	 = panel\spd_cover.png
+Layer = 10
+
+[PilotLamp]
+Subject = true
+Location = 860, 849
+DaytimeImage	 = panel\spd_cover.png
+Layer = 10
+
+[PilotLamp]
+Subject = true
+Location = 1236, 873
+DaytimeImage	 = panel\prs_cover.png
+Layer = 10
+
+[PilotLamp]
+Subject = true
+Location = 1432, 873
+DaytimeImage	 = panel\prs_cover.png
+Layer = 10
