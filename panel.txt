@@ -80,9 +80,9 @@ TransparentColor = 000000
 Origin = 124, 485
 Layer = 9
 Radius		 = 60
-InitialAngle = -115
+InitialAngle = -110
 LastAngle = 120
-Minimum = 5
+Minimum = 4.2
 Maximum = 140
 NaturalFreq = 6.3
 DampingRatio = 0.5
@@ -105,13 +105,13 @@ DampingRatio = 0.5
 
 [PilotLamp]
 Subject = true
-Location = 659, 849
+Location = 659, 845
 DaytimeImage	 = panel\spd_cover.png
 Layer = 10
 
 [PilotLamp]
 Subject = true
-Location = 860, 849
+Location = 860, 845
 DaytimeImage	 = panel\spd_cover.png
 Layer = 10
 
