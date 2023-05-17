@@ -1,0 +1,17 @@
+BveTs Signal Aspects List 2.00
+Signal3,Signal3R,,Signal3Y,,Signal3G
+,Glare3R,,Glare3Y,,Glare3G
+Signal4yy,Signal4R,SignalYY4YY,SignalYY4Y,,SignalYY4G
+,Glare4R,GlareYY4YY,GlareYY4Y,,GlareYY4G
+Signal4yg,Signal4R,,SignalYG4Y,SignalYG4YG,SignalYG4G
+,Glare4R,,GlareYG4Y,GlareYG4YG,GlareYG4G
+Signal5,Signal5R,Signal5YY,Signal5Y,Signal5YG,Signal5G
+,Glare5R,Glare5YY,Glare5Y,Glare5YG,Glare5G
+SignalRepeater,RepeaterR,RepeaterY,RepeaterY,RepeaterY,RepeaterG
+
+SignalRed3,Signal3R,Signal3R,Signal3R,Signal3R,Signal3R
+,Glare3R,Glare3R,Glare3R,Glare3R,Glare3R
+SignalRed4,Signal4R,Signal4R,Signal4R,Signal4R,Signal4R
+,Glare4R,Glare4R,Glare4R,Glare4R,Glare4R
+SignalRedRepeater,RepeaterR,RepeaterR,RepeaterR,RepeaterR,RepeaterR
+

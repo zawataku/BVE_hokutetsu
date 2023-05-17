@@ -1,0 +1,85 @@
+BveTs Map 2.02
+// 定数格納部
+
+// 左(ドア開方向選択などで使用)
+$Left = -1;
+// 右(ドア開方向選択などで使用)
+$Right = 1;
+
+// 電化柱中心位置(エアジョイントの架線引き留め部など)
+$PoleR = 2.875;
+$PoleL = -2.875;
+
+// プラットホーム縁石分
+$PlatformL = -2.5;
+$PlatformR = 2.5;
+
+// 分岐器定数
+// 片開き分岐器終端部の線路間隔
+$Turnout_End_Space = 1.9;
+// 両開き分岐器終端部の線路間隔
+$TurnoutY_End_Space = 0.95;
+
+// 8番分岐器先端長
+$Turnout8_Head_Length = 2;
+// 8番片開き分岐器リード曲線半径
+$Turnout8_Lead_Curve = 125.5;
+// 8番両開き分岐器リード曲線半径
+$Turnout8Y_Lead_Curve = 250;
+// 8番分岐器リード曲線長
+$Turnout8_Lead_Length = 15.6;
+// 8番分岐器クロッシング長
+$Turnout8_End_Length = 7.4;
+// 8番片開き分岐器リード終端部x座標
+$Turnout8_Lead_Space = 0.9758;
+// 8番両開き分岐器リード終端部x座標
+$Turnout8Y_Lead_Space = 0.4875;
+// 8番分岐器全長
+$Turnout8_Length = 25;
+
+// 10番分岐器先端長
+$Turnout10_Head_Length = 2;
+// 10番片開き分岐器リード曲線半径
+$Turnout10_Lead_Curve = 180.6;
+// 10番両開き分岐器リード曲線半径
+$Turnout10Y_Lead_Curve = 360.3;
+// 10番分岐器リード曲線長
+$Turnout10_Lead_Length = 18;
+// 10番分岐器クロッシング長
+$Turnout10_End_Length = 10;
+// 10番片開き分岐器リード終端部x座標
+$Turnout10_Lead_Space = 0.9007;
+// 10番両開き分岐器リード終端部x座標
+$Turnout10Y_Lead_Space = 0.4501;
+// 10番分岐器全長
+$Turnout10_Length = 30;
+
+// 12番分岐器先端長
+$Turnout12_Head_Length = 1;
+// 12番片開き分岐器リード曲線半径
+$Turnout12_Lead_Curve = 269.5;
+// 12番両開き分岐器リード曲線半径
+$Turnout12Y_Lead_Curve = 538;
+// 12番分岐器リード曲線長
+$Turnout12_Lead_Length = 22.4;
+// 12番分岐器クロッシング長
+$Turnout12_End_Length = 11.6;
+// 12番片開き分岐器リード終端部x座標
+$Turnout12_Lead_Space = 0.9336;
+// 12番両開き分岐器リード終端部x座標
+$Turnout12Y_Lead_Space = 0.4667;
+// 12番分岐器全長
+$Turnout12_Length = 35;
+
+// 16番分岐器先端長
+$Turnout16_Head_Length = 0;
+// 16番片開き分岐器リード曲線半径
+$Turnout16_Lead_Curve = 468;
+// 16番分岐器リード曲線長
+$Turnout16_Lead_Length = 29.2;
+// 16番分岐器クロッシング長
+$Turnout16_End_Length = 15.8;
+// 16番片開き分岐器リード終端部x座標
+$Turnout16_Lead_Space = 0.9124;
+// 16番分岐器全長
+$Turnout16_Length = 45;

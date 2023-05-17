@@ -1,0 +1,2004 @@
+BveTs Map 2.02
+// 配布時は関連ファイルを削除すること
+
+// 走行音(Run)
+// バラスト軌道
+	// ロングレール
+	$Ballast = 0;
+	// 標準レール
+	$Ballast25 = 2;
+// スラブ軌道
+	$Slab = 1;
+// 無道床軌道
+	$Girder = 3;
+// トンネル
+	$Tunnel = 4;
+
+// 分岐器通過音(Joint)
+// 標準
+	$Point = 0;
+// 踏切敷板通過音(Joint)
+	$Crossing = 5;
+// 絶縁継目通過音(Joint)
+	$InsulatorJoint = 10;
+// 普通継目通過音(Joint)
+	$Joint = 11;
+
+// フランジ音(Flange)
+	$Flange = 0;
+
+// 停目前方許容距離(m)
+$StopUnder = -5;
+// 停目後方許容距離(m)
+$StopOver = 5;
+
+// 信号許容制限
+$SigLimitYY = 25; // 警戒
+$SigLimitY = 55; // 注意
+$SigLimitYG = 75; // 減速
+$SigLimitG = 85; // 進行
+
+Structure.Load('Structure\StructureList.csv');
+Signal.Load('SignalList.csv');
+Signal.SpeedLimit(0, $SigLimitYY, $SigLimitY, $SigLimitYG, $SigLimitG);
+Sound.Load('Sound\SoundList.csv');
+Sound3D.Load('Sound\Sound3DList.csv');
+Station.Load('StationListSample.csv');
+
+0;
+// 背景
+	Background.Change('Background');
+
+// 定数ファイル
+Include 'MapConstant.txt';
+
+// 基本線路設定
+$Gauge = 1067 / 1000;
+	Curve.SetGauge($Gauge);
+	Curve.SetCenter($Gauge / 2);
+	Curve.SetFunction(1);
+	Track[1].Cant.SetGauge($Gauge);
+	Track[1].Cant.SetCenter($Gauge / 2);
+	Track[1].Cant.SetFunction(1);
+
+// 環境
+	Fog.Interpolate(0.002, 1, 1, 1); // 遠景霧
+	Light.Ambient(0.98, 0.95, 0.98);
+	Light.Diffuse(0.5, 0.5, 0.5);
+	Light.Direction(70, 30);
+
+// 粘着
+//	Adhesion.Change(0.35, 0, 0.01); // 乾燥
+	Adhesion.Change(0.32, 0, 0.0095); // 晴れ
+//	Adhesion.Change(0.24, 0, 0.015); // 雨
+
+// 軌道整備精度
+//	Irregularity.Change(0.0008, 0.0005, 0.0003, 50, 50, 50); // 優
+//	Irregularity.Change(0.0015, 0.001, 0.001, 50, 50, 50); // 良
+	Irregularity.Change(0.002, 0.00126, 0.0008, 50, 50, 50); // 並
+//	Irregularity.Change(0.0032, 0.002, 0.00125, 50, 50, 50); // 可
+//	Irregularity.Change(0.005, 0.00315, 0.001987516, 50, 50, 50); // 劣
+
+0;
+	Section.Begin(0, 1, 2, 3, 4);
+// ATS-P最高速度設定
+	Beacon.Put(7, -1, $SigLimitG + 5); // SigLimitG(青信号のときの許容速度)を超えるとパターン接近点灯、そこから5キロ速度超過でブレーキ動作
+
+// ATS-P分岐器速度制限設定
+2775; // この地点に分岐器(StationB)
+$Limit = 60;
+$LimitStart = 600;
+Distance - $LimitStart;
+	Beacon.Put(6, -1, $LimitStart * 1000 + $Limit + 5); // LimitStartメートル先でLimitキロに減速できるブレーキパターンを設定する
+	Structure['Beacon'].Put0(0, 0, 0); // 速度制限用地上子ストラクチャ
+Distance - 5;
+	Structure['Beacon'].Put0(0, 0, 0); // 速度制限用地上子ストラクチャ
+
+0;
+// 地面
+	Track['Ground'].Position(0, 0);
+	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL');
+	Repeater['GroundR'].Begin0('Ground', 1, 25, 25, 'GrassR');
+// 軌道
+	Track[1].X.Interpolate(3.8); // 右に線路ストラクチャを置くためのトラック
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01'); // レールストラクチャ
+
+700;
+	Gradient.Interpolate(-0.5);
+
+825;
+	CabIlluminance.Interpolate(0.9);
+
+975;
+	RollingNoise.Change($Ballast25);
+// 駅(自線)
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformL'); // プラットホーム縁
+	Repeater['Platform0kage'].Begin0(0, 1, 5, 5, 'PlatformLShadow'); // プラットホーム縁の影
+	Repeater['PlatformC0'].Begin0(0, 1, 5, 5, 'PlatformCL11', 'PlatformCL12', 'PlatformCL13', 'PlatformCL14', 'PlatformCL15'); // プラットホームのメインアスファルト部(標準幅ストラクチャ)
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallL'); // プラットホーム用フェンス
+	Repeater['RailShadow0'].Begin0(0, 1, 5, 5, 'StationBallastShadowL'); // プラットホームによる線路への影
+// 駅上屋(自線)
+	Repeater['Roof0'].Begin0(0, 1, 10, 10, 'RoofL'); // プラットホーム屋根
+	Repeater['RoofPillar0'].Begin0(0, 1, 10, 10, 'RoofPillarL'); // 屋根の柱(線路側)
+	Repeater['RoofPillarC0'].Begin(0, $PlatformL - 4.0, 0, 0, 0, 0, 0, 1, 10, 10, 'RoofPillarC'); // 屋根の柱(フェンス側)
+// 駅(他線1)
+	Repeater['Platform1'].Begin0(1, 1, 5, 5, 'PlatformR');
+	Repeater['Platform1kage'].Begin0(1, 1, 5, 5, 'PlatformRShadow');
+	Repeater['PlatformC1'].Begin0(1, 1, 5, 5, 'PlatformCR11S', 'PlatformCR12S', 'PlatformCR13S', 'PlatformCR14S', 'PlatformCR15S');
+	Repeater['PlatformWall1'].Begin0(1, 1, 5, 5, 'PlatformWallRS');
+	Repeater['RailShadow1'].Begin0(1, 1, 5, 5, 'StationBallastShadowR');
+// 駅上屋(他線1)
+	Repeater['Roof1'].Begin0(1, 1, 10, 10, 'RoofRS');
+	Repeater['RoofPillar1'].Begin0(1, 1, 10, 10, 'RoofPillarR');
+Distance + 2.5;
+// 乗車位置案内ステッカー(本来なら1号車や2号車などと書いてあるもの)
+	Repeater['DoorGuide0'].Begin0(0, 1, 5, 5, 'DoorGuideL');
+	Repeater['DoorGuide1'].Begin0(1, 1, 5, 5, 'DoorGuideR');
+
+1000;
+$Wire = 30;
+	Repeater['Pole1'].Begin(1, -8.0, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole40'); // 電化柱
+	Repeater['Pole1Crossarm'].Begin(1, -8.0 + 3.8 * 3, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'CrossarmR'); // き電線・高圧配電線用の腕金ストラクチャ
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire1'].Begin0(1, 1, $Wire, $Wire, 'Wire' + $Wire);
+// 停止位置
+	Station['StationA'].Put($Left, $StopUnder, $StopOver);
+	Structure['StopR'].Put0(0, 0, 0); // 停止位置目標ストラクチャ
+Distance + 5;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ(自列車停止位置用)
+
+1015;
+// 駅(自線)ホーム幅変形
+	Repeater['PlatformC0'].Begin0(0, 1, 5, 5, 'PlatformCL11S', 'PlatformCL12S', 'PlatformCL13S', 'PlatformCL14S', 'PlatformCL15S'); // プラットホームアスファルト(幅狭)
+	Repeater['Roof0'].Begin0(0, 1, 10, 10, 'RoofLS'); // 幅狭プラットホーム用屋根
+	Repeater['RoofPillarC0'].End(); // 標準幅プラットホーム用屋根柱ここまで
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallLS'); // 幅狭プラットホーム用フェンス
+	Structure['PlatformWalltoSL'].Put0(0, 1, 0); // 標準幅⇔幅狭プラットホーム切り替わり箇所用フェンス
+
+1025;
+// 駅上屋(自線)ここまで
+	CabIlluminance.Interpolate();
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformLEnd'); // 駅終端部用ストラクチャ
+	Repeater['PlatformC0'].Begin0(0, 1, 5, 5, 'PlatformCLEndS'); // 駅終端部用ストラクチャ
+	Repeater['Platform0kage'].End(); // プラットホーム縁の影ここまで
+	Repeater['Roof0'].End();
+	Repeater['RoofPillar0'].End();
+	Repeater['DoorGuide0'].End();
+	Structure['StopR'].Put0(0, 0, 0); // 停止位置目標
+Distance + 5;
+	CabIlluminance.Interpolate(1.0);
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ(停止位置用)
+
+1030;
+// 駅(自線)ここまで
+	Structure['FenceStepEndL'].Put0(0, 1, 0); // 駅端関係者用タラップ
+	Structure['PlatformEndFenceLS'].Put0(0, 1, 0); // 駅端フェンス
+	Repeater['RailShadow0'].End();
+	Repeater['Platform0'].End();
+	Repeater['PlatformC0'].End();
+	Repeater['PlatformWall0'].End();
+
+1045;
+// 駅上屋(自線)ここまで
+	Repeater['Platform1'].Begin0(1, 1, 5, 5, 'PlatformREnd');
+	Repeater['PlatformC1'].Begin0(1, 1, 5, 5, 'PlatformCREndS');
+	Repeater['Platform1kage'].End();
+	Repeater['Roof1'].End();
+	Repeater['RoofPillar1'].End();
+	Repeater['DoorGuide1'].End();
+
+1050;
+// 駅(他線1)ここまで
+	Structure['FenceStepEndR'].Put0(1, 1, 0); // 駅端関係者用タラップ
+	Structure['PlatformEndFenceRS'].Put0(1, 1, 0); // 駅端フェンス
+	Repeater['RailShadow1'].End();
+	Repeater['Platform1'].End();
+	Repeater['PlatformC1'].End();
+	Repeater['PlatformWall1'].End();
+
+1068;
+	Structure['Limit45R'].Put(0, -2.2, 0, 0, 0, 0, 0, 0, 0); // 制限45ストラクチャ
+
+1070;
+	SpeedLimit.Begin(45);
+// 自線出発信号機
+$Signal0 = Distance;
+	Signal['Signal3'].Put(1, 0, -2.2, 4.2, 0, 0, 0, 0, 0, 0); // 信号本体
+	Section.Begin(0, 2, 4); // 3灯式信号機用セクション構文
+	Structure['SigPole'].Put(0, -2.4, 0, 0, 0, 0, 0, 0, 0); // 信号柱
+	Structure['Warning2'].Put(0, -2.4, 2.75, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['BoxShort'].Put(0, -3.0, 0, -5.0, 0, 0, 0, 0, 0); // 器具箱
+	Structure['Bond'].Put(0, -1.6, 0, 0, 0, 0, 0, 0, 0); // インピーダンスボンド
+	JointNoise.Play($InsulatorJoint); // 絶縁継ぎ目音
+Distance - 25;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子ストラクチャ
+$Signal0 - 50;
+//	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 130;
+//	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 280;
+//	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+
+// 曲線イ R180.6 TCLa0 CCL18 TCLb0 C0
+1072;
+	Curve.Change(180.6);
+	Track[1].X.Interpolate(3.8, -180.6);
+
+1090;
+	Repeater['Pole1'].Begin(1, -3.8, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole20');
+	Repeater['Pole1Crossarm'].Begin(1, -3.8 + 3.8, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'CrossarmR'); // き電線・高圧配電線用の腕金ストラクチャ
+	Curve.Change(0);
+	Track[1].X.Interpolate(2.9, 0);
+// 付帯曲線ここまで
+
+1100;
+// 10番分岐ここから
+	Curve.Change(0);
+	Track[1].X.Interpolate($Turnout_End_Space, 0);
+	Repeater['Rail0'].End();
+	Repeater['Rail1'].End();
+	JointNoise.Play($Point); // ポイント通過音(分岐器ストラクチャが背向のときの発生位置)
+Distance + $Turnout10_End_Length;
+	Curve.Change($Left * $Turnout10_Lead_Curve);
+	Track[1].X.Interpolate($Turnout10_Lead_Space, $Turnout10_Lead_Curve);
+Distance + $Turnout10_Lead_Length;
+	Curve.Change(0);
+	Track[1].X.Interpolate(0, 0);
+Distance + $Turnout10_Head_Length;
+// 10番分岐ここまで
+	SpeedLimit.End();
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	Structure['Turnout10R-R'].Put(0, 0, 0, 0, 0, 180, 0, 1, -$Turnout10_Length); // 分岐器ストラクチャ本体
+	Structure['PointMotor'].Put(0, 1.9, 0, -2.2, 0, 180, 0, 0, 0); // ポイントモーターストラクチャ
+	Structure['LimitBack'].Put(0, 2.2, 0, 0, 0, 0, 0, 0, 0); // 速度制限標(裏)
+
+1120;
+	Repeater['Pole1'].Begin(1, 0, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole10');
+	Repeater['Wire0'].End();
+// 分岐側架線
+	Track['WireEnd0'].X.Interpolate(0, 0);
+	Repeater['WireEnd0'].Begin0('WireEnd0', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire); // テンションバランサ付き架線(架線終端側)
+
+1150;
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire1'].End();
+	Repeater['Pole1'].End();
+	Repeater['Pole1Crossarm'].End();
+// 分岐側架線
+	Track['WireEnd0'].X.Interpolate($PoleR, 0);
+	Repeater['WireEnd0'].End();
+	Structure['WireAnchorEnd'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 架線引き留め部(終端側)
+
+1160;
+	Gradient.Interpolate();
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L'); // 築堤
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R'); // 築堤
+
+Distance + 24;
+	Gradient.Interpolate(7.5);
+	Track['Ground'].Y.Interpolate(0, 0);
+
+1195;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'EJoint0'); // 自線用伸縮継目(EJoint1は他線用)
+Distance + 5;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	RollingNoise.Change($Ballast);
+
+1250;
+$Signal1 = Distance;
+// 反対側場内信号機
+	Structure['SigPole'].Put(0, 2.2, 0, 0, 0, 180, 0, 0, 0); // 信号柱
+	Structure['SignalBack'].Put(0, 2.2, 4.2, 0, 0, 0, 0, 0, 0); // 信号機(裏)
+	Structure['BoxShort'].Put(0, 3.0, 0, 3.0, 0, 0, 0, 0, 0); // 器具箱
+	Structure['Bond'].Put(0, 1.6, 0, 0, 0, 0, 0, 0, 0); // インピーダンスボンド
+	JointNoise.Play($InsulatorJoint); // 絶縁継ぎ目通過音
+$Signal1 + 25;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子ストラクチャ
+$Signal1 + 50;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal1 + 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal1 + 130;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal1 + 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal1 + 280;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+
+1270;
+// エアジョイントここから
+	Track['Joint0'].X.Interpolate($PoleR, 0); // PoleRは右電化柱の中心位置
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'WireBalancerStart' + $Wire, 'Wire' + $Wire, 'Wire' + $Wire, 'Wire' + $Wire); // テンションバランサ付き架線(始端)＆3径間分の通常架線
+	Structure['WireAnchorStart'].Put0('Joint0',0, 0); // 架線引き留め部(始端側)
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0.15, 0); // エアジョイントなので架線離隔150mmに設定
+	Track['Wire0'].X.Interpolate(0, 0);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0, 0); // これを入れないと架線がずれる
+	Track['Wire0'].X.Interpolate(-0.15, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire); // テンションバランサ(始端側)
+Distance + $Wire;
+// エアジョイント
+	Track['Wire0'].X.Interpolate($PoleR, 0);
+	Repeater['Wire0'].End();
+	Structure['WireAnchorEnd'].Put0('Wire0', 0, 0); // 架線引き留め部(終端側)
+Distance + $Wire;
+// エアジョイントここまで
+$Wire = 30;
+	Track['Joint0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire); // 自線の架線を標準形態に戻す
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+
+1350;
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+	Repeater['Bridge0L'].Begin(0, -1.0, 0, 0, 0, 0, 0, 1, 5, 5, 'WallFenceL'); // 目の字柵の壁ストラクチャ
+	Repeater['Bridge0R'].Begin(0, 1.0, 0, 0, 0, 0, 0, 1, 5, 5, 'WallFenceR');
+	Structure['PowerOn'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 力行標
+1355;
+	Repeater['Bridge0L'].End();
+	Repeater['Bridge0R'].End();
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L'); // 築堤
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R'); // 築堤
+
+
+1490;
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+1500;
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+	Repeater['Bridge0L'].Begin0(0, 1, 5, 5, 'WallL'); // 高架橋壁
+	Repeater['Bridge0R'].Begin(0, 1.0, 0, 0, 0, 0, 0, 1, 5, 5, 'WallR'); // 高架橋壁
+
+1525;
+	Repeater['Bridge0L'].End();
+	Repeater['Bridge0R'].End();
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L');
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+
+1585;
+	Gradient.Interpolate();
+Distance + 15;
+	Gradient.Interpolate(2.5);
+	Track['Ground'].Y.Interpolate(-3.0 + -2.0);
+
+1590;
+$Wire = 30;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RL');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+1600;
+	Curve.Interpolate(0, 0);
+
+1635;
+	Curve.Interpolate(-1600, 40 / 1000);
+
+1685;
+	Curve.Interpolate();
+
+1710;
+	Curve.Interpolate(0, 0);
+
+1710;
+	Structure['Call1'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 歓呼標
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+1750;
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+	Repeater['Bridge0L'].Begin0(0, 1, 5, 5, 'WallL'); // 高架橋壁
+	Repeater['Bridge0R'].Begin0(0, 1, 5, 5, 'WallR'); // 高架橋壁
+	Structure['Warning5'].Put(0, $PoleR, 4.2, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+
+1830;
+	Structure['Warning5'].Put(0, $PoleR, 4.2, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+
+1850;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'EJoint0'); // 自線用伸縮継目(EJoint1は他線用)
+Distance + 5;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ
+	RollingNoise.Change($Ballast25);
+
+1870;
+$Wire = 30;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10');
+	Repeater['Pole0Crossarm'].Begin0(0, 0, $Wire, $Wire, 'CrossarmR'); // き電線・高圧配電線用の腕金ストラクチャ
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Bridge0L'].End();
+	Repeater['Bridge0R'].End();
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L');
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+
+1895;
+	Repeater['Guard0L'].Begin0(0, 3, 5, 5, 'GuardL'); // 護輪軌条ストラクチャ
+	Repeater['Guard0R'].Begin0(0, 3, 5, 5, 'GuardR'); // 護輪軌条ストラクチャ
+
+1900;
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10');
+	Repeater['Pole0Crossarm'].Begin0(0, 0, $Wire, $Wire, 'FeederR'); // き電線のみの腕金ストラクチャ
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Girder'); // レールストラクチャ(無道床軌道)
+	Repeater['Bridge0L'].Begin0(0, 1, 10, 10, 'GirderBridgeLowL'); // 桁橋(長さ10メートル)
+	Repeater['Bridge0R'].Begin0(0, 1, 10, 10, 'GirderBridgeLowR'); // 桁橋(長さ10メートル)
+	RollingNoise.Change($Girder); // 走行音変更
+
+1950;
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RAArmless', 'Pole10RBArmless'); // 単線用電化柱ストラクチャ(き電線・高圧配電線用腕金無し)
+	Repeater['Pole0Crossarm'].Begin0(0, 0, $Wire, $Wire, 'FeederR'); // き電線のみの腕金
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+2000;
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RAArmless', 'Pole10RBArmless');
+	Repeater['Pole0Crossarm'].Begin0(0, 0, $Wire, $Wire, 'FeederR');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Bridge0L'].End();
+	Repeater['Bridge0R'].End();
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ(バラスト軌道)
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L');
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+	RollingNoise.Change($Ballast25);
+
+2005;
+	Repeater['Guard0L'].End();
+	Repeater['Guard0R'].End();
+
+2040;
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Pole0Crossarm'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Structure['PowerOff'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 惰行標
+
+2050;
+// 自線閉塞信号機
+$Signal0 = Distance;
+	Signal['Signal4yg'].Put(1, 0, 2.2, 4.0, 0, 0, 0, 0, 0, 0); // 4灯式(YG)信号機
+	Section.Begin(0, 2, 4); // 4灯式用セクション構文
+	Structure['SigPole'].Put(0, 2.2, -0.5, 0, 0, 0, 0, 0, 0); // 信号柱
+	Structure['Block1'].Put(0, 2.2, 0.5, 0, 0, 0, 0, 0, 0); // 閉塞信号機識別標識
+	Structure['BoxShort'].Put(0, 3.0, 0, -5.0, 0, 0, 0, 0, 0); // 器具箱
+	Structure['Bond'].Put(0, 1.6, 0, 0, 0, 0, 0, 0, 0); // インピーダンスボンド
+	JointNoise.Play($InsulatorJoint);
+$Signal0 - 30;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子ストラクチャ
+$Signal0 - 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+// 反対側閉塞信号機(信号柱自線側共用)
+$Signal0;
+	Structure['SignalBack4'].Put(0, 2.2, 3.7, 0.1, 0, 0, 0, 0, 0); // 4灯式信号機(裏)
+$Signal0 + 30;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子ストラクチャ
+$Signal0 + 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 + 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+
+2100;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'EJoint0');
+Distance + 5;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	RollingNoise.Change($Ballast);
+
+2120;
+	Gradient.Interpolate();
+
+2150;
+	Track['Ground'].Y.Interpolate();
+	Gradient.Interpolate(-7.0);
+
+2160;
+	Structure['Call'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 歓呼標
+
+2200;
+// エアジョイントここから
+	Track['Joint0'].X.Interpolate($PoleR, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'WireBalancerStart' + $Wire);
+	Structure['WireAnchorStart'].Put0('Joint0',0, 0);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0.15, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'Wire' + $Wire);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0, 0);
+	Track['Wire0'].X.Interpolate(-0.15, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire);
+Distance + $Wire;
+// エアジョイント
+	Track['Wire0'].X.Interpolate($PoleR, 0);
+	Repeater['Wire0'].End();
+	Structure['WireAnchorEnd'].Put0('Wire0', 0, 0);
+Distance + $Wire;
+// エアジョイントここまで
+$Wire = 50;
+	Track['Joint0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].End();
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+2290;
+	Gradient.Interpolate();
+
+2300;
+	Track['Ground'].Y.Interpolate(0, 0);
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+
+2310;
+	Gradient.Interpolate(0);
+
+2370;
+// 踏切
+	Structure['CrMediumL'].Put0(0, 1, 6); // 踏切警報機・遮断桿ストラクチャ(左)
+	Structure['CrMediumR'].Put0(0, 1, 6); // 踏切警報機・遮断桿ストラクチャ(左)
+	Structure['BoardMedium'].Put0(0, 1, 6); // 連接軌道敷板
+	Structure['BoxLarge'].Put(0, 4.0, 0, -5.0, 0, 0, 0, 0, 0); // 器具箱
+	JointNoise.Play($Crossing); // 踏切通過音
+
+2375;
+// オーバーパス影ここから
+	CabIlluminance.Interpolate(1.0);
+	Structure['BallastShadowStart'].Put0(0, 3, 5); // バラスト軌道用影(始端)
+	Structure['GroundShadowStart'].Put0('Ground', 1, 5); // 地面ストラクチャ用影(始端)
+
+2380;
+// オーバーパス本体
+	CabIlluminance.Interpolate(0.8);
+	Repeater['Rail0Shadow'].Begin0(0, 3, 5, 5, 'BallastShadow'); // バラスト軌道用影
+	Repeater['GroundShadow'].Begin0('Ground', 3, 5, 5, 'GroundShadow'); // 地面ストラクチャ用影
+	Structure['Overpass'].Put0(0, 1, 10); // 橋桁本体(奥行き9.6メートル)
+	Structure['OverpassL'].Put0(0, 1, 10);
+	Structure['OverpassR'].Put0(0, 1, 10);
+	Structure['OverpassFence'].Put0(0, 1, 10); // オーバーパス転落防止柵
+	Structure['OverpassDikeL'].Put(0, -5.0, 0, 0, 0, 0, 0, 1, 0); // オーバーパス用築堤
+	Structure['OverpassPier'].Put(0, 10, 0, 0, 0, 0, 0, 0, 0); // オーバーパス用橋脚
+	Structure['OverpassPier'].Put(0, 10 * 3, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 5, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 7, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 9, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 11, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 13, 0, 0, 0, 0, 0, 0, 0);
+Distance + 10;
+// オーバーパス本体
+	Structure['Overpass'].Put0(0, 1, 10); // 橋桁本体(奥行き9.6メートル)
+	Structure['OverpassL'].Put0(0, 1, 10);
+	Structure['OverpassR'].Put0(0, 1, 10);
+	Structure['OverpassDikeL'].Put(0, -5.0, 0, 0, 0, 0, 0, 1, 0);
+	Structure['OverpassPier'].Put(0, 10, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 3, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 5, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 7, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 9, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 11, 0, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 13, 0, 0, 0, 0, 0, 0, 0);
+Distance + 10;
+	Structure['OverpassFence'].Put0(0, 1, 10);
+Distance + 5;
+	CabIlluminance.Interpolate();
+	Repeater['Rail0Shadow'].End();
+	Repeater['GroundShadow'].End();
+	Structure['BallastShadowEnd'].Put0(0, 3, 5); // バラスト軌道用影(終端)
+	Structure['GroundShadowEnd'].Put0('Ground', 1, 5); // 地面ストラクチャ用影(終端)
+Distance + 5;
+// オーバーパス影ここまで
+	CabIlluminance.Interpolate(1.0);
+
+2410;
+$Wire = 30;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+2435;
+	Curve.Interpolate(0, 0);
+
+2440;
+$Wire = 30;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RR');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+2450;
+// 人道踏切
+	Structure['CrPeopleL'].Put0(0, 1, 6); // 踏切警報機・遮断桿ストラクチャ(左)
+	Structure['CrPeopleR'].Put0(0, 1, 6); // 踏切警報機・遮断桿ストラクチャ(右)
+	Structure['BoardPeople'].Put0(0, 1, 6); // 敷板
+	Structure['BoxLarge'].Put(0, 4.0, 0, 5.0, 0, 0, 0, 0, 0); // 器具箱
+
+2475;
+	Curve.Interpolate(700, 65 / 1000);
+
+2480;
+// 自線中継信号機・他線中継信号機
+	Structure['Call'].Put(0, -2.2, 0, 0, 0, 0, 0, 0, 0); // 歓呼標
+	Signal['SignalRedRepeater'].Put(1, 0, -2.2, 4.1); // 中継信号機(停止現示)
+	Structure['Arr1'].Put(0, -2.2, -2.0, 0, 0, 0, 0, 0, 0); // 番線表示標(1番線場内)
+	Structure['SigPole'].Put(0, -2.2, 0, 0, 0, 0, 0, 0, 0); // 信号柱
+	Signal['SignalRepeater'].Put(1, 0, -3.0, 3.8); // 中継信号機(自線用)
+	Structure['Arr2'].Put(0, -3.0, -2.2, -0.2, 0, 0, 0, 0, 0); // 番線表示標(2番線場内)
+	Signal['SignalRedRepeater'].Put(1, 0, -3.6, 3.5); // 中継信号機(停止現示)
+	Structure['Arr3'].Put(0, -3.6, -2.5, -0.1, 0, 0, 0, 0, 0); // 番線表示標(3番線場内)
+	Structure['SigPole'].Put(0, -3.3, -0.5, 0, 0, 0, 0, 0, 0); // 信号柱
+
+2500;
+	Curve.Interpolate();
+	Structure['SigPole'].Put(0, -2.2, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Warning5Back'].Put(0, -2.2, 4.8, 0, 0, 0, 0, 0, 0);
+
+2540;
+	Curve.Interpolate(0, 0);
+
+2560;
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+2580;
+	Gradient.Interpolate();
+
+2589;
+	Gradient.Interpolate(-3.0);
+
+2600;
+	Structure['B500'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 制動標(500メートル)
+
+2680;
+// 自線場内信号機
+$Signal0 = Distance;
+	Signal['SignalRed3'].Put(1, 0, -2.2, 4.2, 0, 0, 0, 0, 0, 0); // 3灯式信号機(停止現示)
+	Structure['Arr1'].Put(0, -2.2, 0, 0, 0, 0, 0, 0, 0);
+	Structure['SigPole'].Put(0, -2.2, 0, 0, 0, 0, 0, 0, 0);
+	Signal['Signal3'].Put(1, 0, -3.0, 3.7, 0, 0, 0, 0, 0, 0); // 自線用3灯式信号機
+	Structure['Arr2'].Put(0, -3.0, -0.5, 0, 0, 0, 0, 0, 0);
+	Signal['SignalRed3'].Put(1, 0, -3.6, 3.2, 0, 0, 0, 0, 0, 0);
+	Structure['Arr3'].Put(0, -3.6, -1.0, 0, 0, 0, 0, 0, 0);
+	Section.Begin(0, 2, 4); // 3灯式信号機用セクション構文
+	Structure['SigPole'].Put(0, -3.3, -0.6, 0, 0, 0, 0, 0, 0);
+	Structure['BoxLarge'].Put(0, -3.0, 0, -3.0, 0, 0, 0, 0, 0); // 器具箱
+	Structure['Bond'].Put(0, -1.6, 0, 0, 0, 0, 0, 0, 0); // インピーダンスボンド
+	JointNoise.Play($InsulatorJoint); // 絶縁継ぎ目通過音
+$Signal0 - 25;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子ストラクチャ
+$Signal0 - 50;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 130;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal0 - 280;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+
+2720;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10');
+	Repeater['Pole0crossarm'].Begin0(0, 0, $Wire, $Wire, 'CrossarmR');
+	Structure['B400'].Put(0, $PoleL, 2.0, 0, 0, 0, 0, 0, 0);
+
+2750;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'EJoint0');
+	Structure['SigPole'].Put(0, -2.2, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Warning5Back'].Put(0, -2.2, 4.8, 0, 0, 0, 0, 0, 0);
+Distance + 5;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	RollingNoise.Change($Ballast25);
+
+2760;
+	Gradient.Interpolate();
+	Repeater['Pole0'].Begin(0, -3.8, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole20');
+	Track['Wire0Start'].X.Interpolate($PoleR, 0);
+	Repeater['Wire0Start'].Begin0('Wire0Start', 1, $Wire, $Wire, 'WireBalancerStart' + $Wire);
+	Structure['WireAnchorStart'].Put0('Wire0Start', 0, 0);
+
+2769;
+	Gradient.Interpolate(0);
+
+2770;
+// 踏切
+	Structure['CrMediumL'].Put0(0, 1, 6);
+	Structure['CrMediumR'].Put0(0, 1, 6);
+	Structure['BoardMedium'].Put0(0, 1, 6);
+	Structure['BoxLarge'].Put(0, 4.0, 0, -5.0, 0, 0, 0, 0, 0);
+	JointNoise.Play($Crossing);
+
+2800;
+	SpeedLimit.Begin($Limit);
+	Repeater['Rail0'].End();
+	Structure['Turnout12Y-L'].Put0(0, 1, $Turnout12_Length); // 分岐器ストラクチャ本体
+	Structure['PointMotor'].Put(0, 1.6, 0, 1.0, 0, 0, 0, 0, 0);
+	Structure['Limit60'].Put(0, 2.5, 0, 0, 0, 0, 0, 0, 0);
+	JointNoise.Play($Point);
+// 架線
+$Wire = 40;
+	Track['Wire3'].X.Interpolate($PoleR, 0);
+	Repeater['Wire3'].Begin0('Wire3', 1, $Wire, $Wire, 'WireBalancerStart' + $Wire); // テンションバランサ付き架線(始端)
+	Structure['WireAnchorStart'].Put0('Wire3', 0, 0); // 架線引き留め部(始端)
+	Track['Wire0Start'].X.Interpolate(0.1, 0);
+	Repeater['Wire0Start'].Begin0('Wire0Start', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire0'].End();
+	Repeater['Wire1'].Begin0(1, 1, $Wire, $Wire, 'Wire' + $Wire);
+Distance + $Turnout12_Head_Length;
+	Curve.Change($Left * $Turnout12Y_Lead_Curve);
+	Track[1].X.Interpolate(0, 1 / (1 / $Turnout12Y_Lead_Curve - 1 / - $Turnout12Y_Lead_Curve));
+Distance + $Turnout12_Lead_Length;
+	Curve.Change(0);
+	Track[1].X.Interpolate(2 * $Turnout12Y_Lead_Space, 0);
+Distance + $Turnout12_End_Length;
+	Track[1].X.Interpolate(2 * $TurnoutY_End_Space, 0);
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01');
+
+2840;
+	Track['Wire0Start'].X.Interpolate(0, 0);
+	Repeater['Wire0Start'].End();
+	Track['Wire3'].X.Interpolate(1.3, 0);
+	Repeater['Wire3'].Begin0('Wire3', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Pole0'].End();
+	Structure['Pole20'].PutBetween(3, 1);
+	Repeater['Pole0crossarm'].End();
+	Repeater['Pole1crossarm'].Begin(1, 0, 0, -0.5, 0, 0, 0, 0, $Wire, $Wire, 'CrossarmR');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+2845;
+	Track[3].X.Interpolate(0, 0);
+	Repeater['Rail0'].End();
+	Structure['Turnout12L-S'].Put0(0, 1, $Turnout16_Length);
+	Structure['PointMotor'].Put(0, -1.6, 0, 1.0, 0, 0, 0, 0, 0);
+	Structure['Limit45L'].Put(0, -2.5, -1.5, 0, 0, 0, 0, 0, 0);
+	JointNoise.Play($Point);
+Distance + $Turnout12_Head_Length;
+	Track[3].X.Interpolate(0, $Left * $Turnout12_Lead_Curve);
+Distance + $Turnout12_Lead_Length;
+	Track[3].X.Interpolate(-$Turnout12_Lead_Space, 0);
+Distance + $Turnout12_End_Length;
+	Track[3].X.Interpolate(-$Turnout_End_Space, 0);
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	Repeater['Rail3'].Begin0(3, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01');
+
+2850;
+	Structure['25CrackBallastR'].PutBetween(0, 1); // 線路間用砕石ストラクチャ(右用)
+// 反対側出発信号機(右他線1)
+$Signal1 = Distance;
+	Structure['SignalBack'].Put(1, 2.7, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['SigPole'].Put(1, 2.5, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Bond'].Put(1, 1.6, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(1, 3.0, 0, -3.0, 0, 0, 0, 0, 0);
+$Signal1 + 20;
+	Structure['Beacon0'].Put0(1, 0, 0); // P直下地上子
+$Signal1 + 85;
+//	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子
+$Signal1 + 180;
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子
+
+2875;
+	Structure['25CrackBallastR'].PutBetween(0, 1); // 線路間用砕石ストラクチャ(右用)
+
+2880;
+$Wire = 20;
+	Track['Wire3'].X.Interpolate(-1.9, 0);
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire3'].Begin0(3, 1, $Wire, $Wire, 'Wire' + $Wire);
+$Wire1 = 30;
+	Repeater['Pole1'].Begin(1, -3.8 * 2, 0, 0, 0, 0, 0, 0, $Wire1, $Wire1, 'Pole30');
+	Repeater['Wire1'].Begin0(1, 1, $Wire1, $Wire1, 'Wire' + $Wire1);
+
+2885;
+	Track[3].X.Interpolate(-2.32, 2166);
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子ストラクチャ(停止位置用)
+
+2890;
+	Track[3].X.Interpolate(-2.73, 433.2);
+	Structure['StopBackR'].Put0(1, 0, 0); // 他線1(超大編成用)停止位置ストラクチャ
+
+2895;
+	Track[3].X.Interpolate(-3.1, 361);
+
+2900;
+	Structure['Call'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 歓呼標
+	Structure['Call'].Put(3, $PoleL, 0, 0, 0, 0, 0, 0, 0); // 歓呼標
+	Structure['Warning2'].Put(0, $PoleR, 3.0, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['Warning2'].Put(3, $POleL, 3.0, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+
+	Repeater['Pole0'].End();
+	Structure['Pole20'].PutBetween(3, 0);
+	Structure['25CrackBallastR'].PutBetween(0, 1);
+// 反対側出発信号機(自線)
+$Signal1 = Distance;
+	Structure['SignalBack'].Put(0, 1.9, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['SigPole'].Put(0, 2.0, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Bond'].Put(0, 1.6, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(0, 3.0, 0, -3.0, 0, 0, 0, 0, 0);
+	JointNoise.Play($InsulatorJoint);
+$Signal1 + 20;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子ストラクチャ
+$Signal1 + 85;
+//	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+$Signal1 + 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ
+// 反対側出発信号機(左他線3)
+$Signal1;
+	Structure['SignalBack'].Put(3, -2.2, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['SigPole'].Put(3, -2.2, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Bond'].Put(3, -1.6, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(3, -3.0, 0, -3.0, 0, 0, 0, 0, 0);
+$Signal1 + 20;
+	Structure['Beacon0'].Put0(3, 0, 0); // P直下地上子ストラクチャ
+$Signal1 + 85;
+//	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子ストラクチャ
+$Signal1 + 180;
+	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子ストラクチャ
+
+2910;
+	Repeater['Pole1'].Begin0(1, 0, $Wire1, $Wire1, 'Pole10RL');
+	Repeater['Pole1crossarm'].End();
+	Structure['Warning2'].Put(1, $PoleR, 2.5, -0.2, 0, 0, 0, 0, 0); // 特発(2灯)
+	
+2915;
+	Track[3].X.Interpolate(-3.93, 433.2);
+
+2920;
+	Track[3].X.Interpolate(-3.98, 2166);
+	Structure['Pole20'].PutBetween(3, 0);
+
+2925;
+	Curve.Interpolate(0, 0);
+	Track[1].X.Interpolate(4.7 * 2, 1 / (1 / -3600 - 1 / 3600));
+	Track[3].X.Interpolate(-4.0, 0);
+	Structure['25CrackBallastR'].PutBetween(0, 1);
+
+2930;
+	Track[1].X.Interpolate(4.9 * 2, 1 / (1 / -720 - 1 / 720));
+
+2935;
+	Curve.Interpolate(600, 0);
+	Track[1].X.Interpolate(5.09 * 2, 1 / (1 / -600 - 1 / 600));
+// 駅ここから
+// 島式
+	Repeater['RailShadow0'].Begin0(0, 1, 5, 5, 'StationBallastShadowR'); // プラットホームによる線路への影再現ストラクチャ
+	Repeater['RailShadow1'].Begin0(1, 1, 5, 5, 'StationBallastShadowL');
+	Structure['PlatformRStart'].Put0(0, 1, 5); // プラットホーム縁(始端)
+	Structure['PlatformLStart'].Put0(1, 1, 5);
+	Structure['PlatformCRStart'].PutBetween(0, 1); // プラットホームアスファルト部(始端)
+	Structure['FenceStepStartR'].Put0(0, 1, 0); // 駅端関係者用タラップ
+	Structure['FenceStepStartL'].Put0(1, 1, 0);
+	Structure['PlatformEndFenceR'].PutBetween(0, 1); // 駅端フェンス(島式ではPutbetweenで設置する)
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子ストラクチャ(停止位置用)
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子ストラクチャ(停止位置用)
+// 単式
+	Repeater['RailShadow3'].Begin0(3, 1, 5, 5, 'StationBallastShadowL');
+	Structure['PlatformLStart'].Put0(3, 1, 5);
+	Structure['PlatformCLStartS'].Put0(3, 1, 5);
+	Structure['FenceStepStartL'].Put0(3, 1, 0);
+	Structure['PlatformEndFenceLS'].Put0(3, 1, 0);
+	Repeater['PlatformWall3'].Begin0(3, 1, 5, 5, 'PlatformWallLS');
+	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子(停止位置用)
+Distance + 5;
+	Repeater['Pole0'].Begin(0, -3.8 * 1.5, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+// 島式
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformR'); // プラットホーム縁
+	Repeater['Platform1'].Begin0(1, 1, 5, 5, 'PlatformL'); // プラットホーム縁
+	Structure['PlatformCR01'].PutBetween(0, 1); // プラットホームアスファルト部
+// 単式
+	Repeater['Platform3'].Begin0(3, 1, 5, 5, 'PlatformL'); // プラットホーム縁
+	Repeater['PlatformC3'].Begin0(3, 1, 5, 5, 'PlatformCL01S', 'PlatformCL02S', 'PlatformCL03S', 'PlatformCL04S', 'PlatformCL05S'); // プラットホームアスファルト部
+	Structure['StopBackL'].Put0(0, 0, 0); // 反対側停止位置目標
+	Structure['StopBackR'].Put0(1, 0, 0); // 反対側停止位置目標
+Distance + 2.5;
+	Repeater['DoorGuide0'].Begin0(0, 1, 5, 5, 'DoorGuideR'); // 乗車位置案内ステッカー
+	Repeater['DoorGuide1'].Begin0(1, 1, 5, 5, 'DoorGuideL');
+	Repeater['DoorGuide3'].Begin0(3, 1, 5, 5, 'DoorGuideL');
+
+2945;
+	Structure['PlatformCR02'].PutBetween(0, 1); // 島式の場合は5メートルごとにPutbetweenでプラットホームのアスファルト舗装部分を設置する必要がある
+Distance + 5;
+	Curve.Interpolate();
+	Track[1].X.Interpolate(5.4 * 2, 1 / (1 / -720 - 1 / 720));
+	Structure['PlatformCR03'].PutBetween(0, 1);
+
+2955;
+	Track[1].X.Interpolate(5.42 * 2, 1 / (1 / -3600 - 1 / 3600));
+	Structure['PlatformCR04'].PutBetween(0, 1);
+Distance + 5;
+	SpeedLimit.End();
+	Curve.Interpolate(0, 0);
+	Track[1].X.Interpolate(5.43 * 2, 0);
+	Structure['PlatformCR05'].PutBetween(0, 1);
+$Wire = 30;
+	Repeater['Pole0'].Begin(0, -3.8 * 1.5, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire3'].Begin0(3, 1, $Wire, $Wire, 'Wire' + $Wire);
+2965;
+	Structure['PlatformCR01'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR02'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR03'].PutBetween(0, 1);
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子(停止位置用)
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子(停止位置用)
+	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子(停止位置用)
+
+2980;
+	Structure['PlatformCR04'].PutBetween(0, 1);
+	Structure['StopBackL'].Put0(0, 0, 0); // 反対側停止位置目標
+	Structure['StopBackR'].Put0(1, 0, 0); // 反対側停止位置目標
+// 駅上屋(左他線3)ここから
+	Repeater['PlatformC3'].Begin0(3, 1, 5, 5, 'PlatformCL11S', 'PlatformCL12S', 'PlatformCL13S', 'PlatformCL14S', 'PlatformCL15S');
+	Repeater['Platform3Shadow'].Begin0(3, 1, 5, 5, 'PlatformLShadow');
+	Repeater['RoofPillar3'].Begin0(3, 1, 10, 10, 'RoofPillarL');
+	Repeater['Roof3'].Begin0(3, 1, 10, 10, 'RoofLS');
+Distance + 5;
+	Structure['PlatformCR05'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR01'].PutBetween(0, 1);
+Distance + 5;
+	CabIlluminance.Interpolate(1.0);
+	Structure['PlatformCR02'].PutBetween(0, 1);
+
+3000;
+// 1番線架線
+$Wire1 = 50;
+	Repeater['Pole1'].Begin0(1, 0, $Wire1, $Wire1, 'Pole10RA', 'Pole10RB');
+	Repeater['Wire1'].Begin0(1, 1, $Wire1, $Wire1, 'Wire' + $Wire1);
+// 駅幅変形(左他線3)
+	Repeater['PlatformC3'].Begin0(3, 1, 5, 5, 'PlatformCL11', 'PlatformCL12', 'PlatformCL13', 'PlatformCL14', 'PlatformCL15');
+	Repeater['Roof3'].Begin0(3, 1, 10, 10, 'RoofL');
+	Repeater['RoofPillar3L'].Begin(3, -7.0 + 0.125, 0, 0, 0, 0, 0, 1, 10, 10, 'RoofPillarC'); // 上屋柱最左翼
+	Structure['PlatformWalltoSL'].Put0(3, 1, 0);
+	Repeater['PlatformWall3'].Begin0(3, 1, 5, 5, 'PlatformWallL');
+	Structure['Warning2'].Put(3, -2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+// 駅島式側上屋ここから
+	CabIlluminance.Interpolate(0.9);
+	Structure['PlatformCR13'].PutBetween(0, 1);
+	Repeater['Platform0Shadow'].Begin0(0, 1, 5, 5, 'PlatformRShadow'); // プラットホーム縁用の屋根の影 
+	Repeater['Platform1Shadow'].Begin0(1, 1, 5, 5, 'PlatformLShadow');
+	Repeater['RoofPillar0'].Begin0(0, 1, 10, 10, 'RoofPillarR');
+	Repeater['RoofPillar1'].Begin0(1, 1, 10, 10, 'RoofPillarL');
+	Structure['IslandRoofR'].PutBetween(0, 1); // 島式用プラットホームの上屋
+	Structure['Warning2'].Put(0, 2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['Warning2'].Put(1, -2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+Distance + 5;
+	Structure['PlatformCR14'].PutBetween(0, 1);
+
+3010;
+	Structure['PlatformCR15'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR11'].PutBetween(0, 1);
+
+3020;
+$Wire = 40;
+	Repeater['Pole0'].Begin(0, -3.8 * 1.5, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire3'].Begin0(3, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Structure['PlatformCR12'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR13'].PutBetween(0, 1);
+
+3030;
+// 自線中継信号機
+	Signal['SignalRepeater'].Put(1, 0, 1.9, 4.2);
+	Structure['Call'].Put(0, 1.9, 1.3, 0, 0, 0, 0, 0, 0);
+	Structure['PlatformCR14'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+// 駅跨線橋階段(奥行き10メートル)
+	Structure['UpStairsExitR'].PutBetween(0, 1);
+	Structure['UpStairsExitL'].Put0(3, 1, 0);
+Distance + 5;
+// 線路跨線橋影
+	CabIlluminance.Interpolate();
+	Repeater['Rail0Shadow'].Begin0(0, 3, 5, 5, 'BallastShadowStart', 'BallastShadow', 'BallastShadow', 'BallastShadowEnd'); // バラスト軌道用影(跨線橋による影を一気に設置した)
+	Repeater['Rail3Shadow'].Begin0(3, 3, 5, 5, 'BallastShadowStart', 'BallastShadow', 'BallastShadow', 'BallastShadowEnd');
+	Structure['PlatformCR15'].PutBetween(0, 1);
+Distance + 20;
+	Repeater['Rail0Shadow'].End();
+	Repeater['Rail3Shadow'].End();
+
+3040;
+	CabIlluminance.Interpolate(0.7);
+	Structure['PlatformCR11'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+// 駅跨線橋
+	Structure['StationBridgeL'].Put(0, -0.125, 0, 0, 0, 0, 0, 0, 10);
+Distance + 5;
+	Structure['PlatformCR12'].PutBetween(0, 1);
+// 駅跨線橋階段(奥行き10メートル)
+	Structure['UpStairsEnterR'].PutBetween(0, 1);
+	Structure['UpStairsEnterL'].Put0(3, 1, 0);
+
+3050;
+	CabIlluminance.Interpolate();
+	Structure['PlatformCR13'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+// 地下通路階段貫通用に地面をずらす(地面は25m単位)
+	Repeater['GroundL'].Begin('Ground', -11, 0, 0, 0, 0, 0, 1, 25, 25, 'GrassL');
+	Repeater['GroundR'].Begin('Ground', 11, 0, 0, 0, 0, 0, 1, 25, 25, 'GrassR');
+Distance + 5;
+	CabIlluminance.Interpolate(0.9);
+	Structure['PlatformCR14'].PutBetween(0, 1);
+
+3060;
+	Structure['PlatformCR15'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR11'].PutBetween(0, 1);
+
+3070;
+	Repeater['PlatformC3'].End();
+	Structure['IslandRoofR'].PutBetween(0, 1);
+	Structure['Warning2'].Put(0, 2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['Warning2'].Put(1, -2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['Warning2'].Put(3, -2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+// 駅地下道階段
+	Structure['IslandDownStairsExitR'].PutBetween(0, 1);
+	Structure['DownStairsExitL'].Put0(3, 1, 10);
+
+3080;
+	Structure['PlatformCR11'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+	Repeater['PlatformC3'].Begin0(3, 1, 5, 5, 'PlatformCL11', 'PlatformCL12', 'PlatformCL13', 'PlatformCL14', 'PlatformCL15');
+Distance + 5;
+	Structure['PlatformCR12'].PutBetween(0, 1);
+
+3090;
+	Structure['PlatformCR13'].PutBetween(0, 1);
+	Structure['IslandRoofR'].PutBetween(0, 1);
+// 単式ホーム幅変形、上屋(左他線3)ここまで
+	Repeater['PlatformC3'].Begin0(3, 1, 5, 5, 'PlatformCL01S', 'PlatformCL02S', 'PlatformCL03S', 'PlatformCL04S', 'PlatformCL05S');
+	Repeater['Platform3Shadow'].End();
+	Structure['PlatformWalltoSL'].Put0(3, 1, 0);
+	Repeater['PlatformWall3'].Begin0(3, 1, 5, 5, 'PlatformWallLS');
+	Repeater['RoofPillar3'].End();
+	Repeater['RoofPillar3L'].End();
+	Repeater['Roof3'].End();
+
+3095;
+	Structure['PlatformCR14'].PutBetween(0, 1);
+
+3100;
+	CabIlluminance.Interpolate();
+$Wire = 30;
+	Repeater['Pole0'].Begin(0, -3.8 * 1.5, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire3'].Begin0(3, 1, $Wire, $Wire, 'Wire' + $Wire);
+// 駅上屋ここまで
+	Repeater['Platform0Shadow'].End();
+	Repeater['Platform1Shadow'].End();
+	Repeater['RoofPillar0'].End();
+	Repeater['RoofPillar1'].End();
+	Structure['PlatformCR05'].PutBetween(0, 1);
+// 地下通路階段貫通用にずらした地面を元に戻す
+	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL');
+	Repeater['GroundR'].Begin0('Ground', 1, 25, 25, 'GrassR');
+Distance + 5;
+	CabIlluminance.Interpolate(1.0);
+	Structure['PlatformCR01'].PutBetween(0, 1);
+
+3110;
+	Structure['PlatformCR02'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR03'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR04'].PutBetween(0, 1);
+Distance + 5;
+	Structure['PlatformCR05'].PutBetween(0, 1);
+
+3125;
+	Structure['25CrackBallastR'].PutBetween(0, 1); // 線路間砕石ストラクチャ
+
+3130;
+$Wire = 20;
+	Repeater['Pole0'].Begin(0, -3.8 * 1.5, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire3'].Begin0(3, 1, $Wire, $Wire, 'Wire' + $Wire);
+// 曲線イ R728 TCLa20 CCL25 TCLb20 C0
+	Curve.Interpolate(0, 0);
+	Track[1].X.Interpolate(10.86, -4368);
+// 停止位置
+	Station['StationB'].Put($Right, $StopUnder, $StopOver);
+	Repeater['Platform0'].End();
+	Repeater['Platform1'].End();
+	Structure['PlatformCREnd'].PutBetween(0, 1);
+	Structure['PlatformREnd'].Put0(0, 1, 5);
+	Structure['PlatformLEnd'].Put0(1, 1, 5);
+	Repeater['Platform3'].End();
+	Repeater['PlatformC3'].End();
+	Structure['PlatformLEnd'].Put0(3, 1, 5);
+	Structure['PlatformCLEndS'].Put0(3, 1, 5);
+	Structure['StopL'].Put0(0, 0, 0); // 停止位置目標
+	Structure['StopR'].Put0(1, 0, 0); // 停止位置目標
+Distance + 2.5;
+	Repeater['DoorGuide0'].End();
+	Repeater['DoorGuide1'].End();
+	Repeater['DoorGuide3'].End();
+
+3135;
+// 島式プラットホームここまで
+	Repeater['RailShadow0'].End();
+	Repeater['RailShadow1'].End();
+	Structure['FenceStepEndR'].Put0(0, 1, 0);
+	Structure['FenceStepEndL'].Put0(1, 1, 0);
+	Structure['PlatformEndFenceR'].PutBetween(0, 1);
+// 単式プラットホームここまで
+	Repeater['RailShadow3'].End();
+	Repeater['PlatformWall3'].End();
+	Structure['PlatformEndFenceLS'].Put0(3, 1, 0);
+	Structure['FenceStepEndL'].Put0(3, 1, 0);
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子(停止位置用)
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子(停止位置用)
+	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子(停止位置用)
+
+3140;
+	Track[1].X.Interpolate(10.85, -873.6);
+
+3150;
+	Repeater['Pole0'].End();
+	Repeater['Pole3'].Begin(3, 0, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+	Curve.Interpolate(728, 0);
+	Track[1].X.Interpolate(10.77, -728);
+	Structure['25CrackBallastR'].PutBetween(0, 1);
+	Structure['CheckP'].Put(1, $PoleR, 1.5, 0, 0, 0, 0, 0, 0); // P確認の看板
+	Structure['Warning2'].Put(1, $PoleR, 2.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['Warning5'].Put(1, $PoleR, 3.8, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+
+3155;
+	Track[3].X.Interpolate(-4.0, 2166);
+
+3160;
+	Track[3].X.Interpolate(-3.98, 433.2);
+
+3165;
+	Track[3].X.Interpolate(-3.93, 361);
+
+3170;
+	Repeater['Pole3'].Begin(3, -0.5, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole30');
+// 他線3出発信号機
+$Signal1 = Distance;
+	Signal['SignalRed3'].Put(1, 3, -2.2, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['Dep3'].Put(3, -2.2, 0, 0, 0, 0, 0, 0, 0); // 番線表示標(3番線出発)
+	Structure['SigPole'].Put(3, -2.2, 0, 0, 0, 0, 0, 0, 0);
+	Structure['Warning2'].Put(3, -2.2, 2.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['CheckP'].Put(3, -2.2, 1.0, 0, 0, 0, 0, 0, 0); // P確認の看板
+	Structure['Bond'].Put(3, -1.6, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(3, -3.0, 0, -5.0, 0, 0, 0, 0, 0);
+$Signal1 - 20;
+	Structure['Beacon0'].Put0(3, 0, 0); // P直下地上子
+$Signal1 - 85;
+	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子
+$Signal1 - 180;
+	Structure['Beacon'].Put0(3, 0, 0); // P更新地上子
+
+3175;
+	Curve.Interpolate();
+	Track[1].X.Interpolate(10, -873.6);
+	Structure['25CrackBallastL'].PutBetween(0, 1);
+
+3180;
+// 自線出発信号機
+$Signal0 = Distance;
+	Signal['Signal3'].Put(1, 0, 2.2, 4.2, 0, 0, 0, 0, 0, 0);
+	Section.Begin(0, 2, 4);
+	Structure['Dep2'].Put(0, 2.2, 0, 0, 0, 0, 0, 0, 0); // 番線表示標(2番線出発)
+	Structure['SigPole'].Put(0, 2.2, 0, 0, 0, 0, 0, 0, 0);
+	Structure['Warning2'].Put(0, 2.2, 2.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['CheckP'].Put(0, 2.2, 1.0, 0, 0, 0, 0, 0, 0); // P確認の看板
+	Structure['Bond'].Put(0, 1.6, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(0, 3.0, 0, -5.0, 0, 0, 0, 0, 0);
+$Signal0 - 20;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子
+$Signal0 - 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal0 - 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+
+3185;
+	Track[1].X.Interpolate(9.46, -4368);
+	Track[3].X.Interpolate(-3.1, 433.2);
+
+3190;
+	Track[3].X.Interpolate(-2.73, 2166);
+$Wire = 30;
+	Repeater['Pole3'].Begin0(3, 0, $Wire, $Wire, 'Pole20');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Track['Wire3'].X.Interpolate(-2.73, 0);
+	Repeater['Wire3'].Begin0('Wire3', 1, $Wire, $Wire, 'Wire' + $Wire);
+
+3195;
+	Curve.Interpolate(0, 0);
+	Track[1].X.Interpolate(8.85, 0);
+// 曲線イここまで
+	Track[3].X.Interpolate(-2.32, 0);
+
+3200;
+	Track[3].X.Interpolate(-$Turnout_End_Space, 0);
+	Repeater['Rail0'].End();
+	Repeater['Rail3'].End();
+	Structure['Limit45R'].Put(3, -2.5, 0, 0, 0, 0, 0, 0, 0);
+	Structure['25CrackBallastR'].PutBetween(0, 1);
+	JointNoise.Play($Point);
+Distance + $Turnout12_End_Length;
+	Track[3].X.Interpolate(-$Turnout12_Lead_Space, $Left * $Turnout12_Lead_Curve);
+Distance + $Turnout12_Lead_Length;
+	Track[3].X.Interpolate(0, 0);
+Distance + $Turnout12_Head_Length;
+	Track[3].X.Interpolate(0, 0);
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	Structure['Turnout12R-S'].Put(0, 0, 0, 0, 0, 180, 0, 1, -$Turnout12_Length); // 分岐器ストラクチャ本体
+	Structure['PointMotor'].Put(0, 1.6, 0, -1.0, 0, 180, 0, 0, 0);
+
+3220;
+	Track['Wire3'].X.Interpolate(-0.3, 0);
+	Repeater['Wire3'].Begin0('Wire3', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire);
+	Repeater['Pole3'].Begin0(3, 0, $Wire, $Wire, 'Pole10');
+
+3225;
+	Structure['25CrackBallastR'].PutBetween(0, 1);
+
+3240;
+// 曲線ロ R728 TCLa20 CCL25 TCLb20 C0
+	Curve.Interpolate(0, 0);
+	Track[1].X.Interpolate(6.06, 4368);
+
+3250;
+	Track[1].X.Interpolate(5.46, 873.6);
+	Structure['25CrackBallastL'].PutBetween(0, 1);
+	Structure['Warning5'].Put(0, $PoleL, 3.8, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+$Wire = 30;
+	Track['Wire3'].X.Interpolate($PoleR, 0);
+	Repeater['Wire3'].End();
+	Structure['Pole'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0);
+	Structure['WireAnchorEnd'].Put0('Wire3', 0, 0);
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LLarmless');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Pole3'].End();
+
+3260;
+	Curve.Interpolate(-728, 0);
+	Track[1].X.Interpolate(4.92, 728);
+
+3285;
+	Curve.Interpolate();
+	Track[1].X.Interpolate(4.15, 873.6);
+
+3295;
+	Track[1].X.Interpolate(4.06, 4368);
+
+3305;
+	Curve.Interpolate(0, 0);
+	Track[1].X.Interpolate(4.05, 0);
+// 曲線ロここまで
+
+3340;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LAarmless', 'Pole10LBarmless');
+
+3345;
+	Structure['StopR'].Put0(1, 0, 0); // 停止位置目標
+Distance + 5;
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子(停止位置用)
+
+3395;
+// 他線1出発信号機
+$Signal1 = Distance;
+	Signal['SignalRed3'].Put(1, 1, 2.2, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['Dep1'].Put(1, 2.2, 0, 0, 0, 0, 0, 0, 0);
+	Structure['SigPole'].Put(1, 2.2, 0, 0, 0, 0, 0, 0, 0);
+	Structure['Warning2'].Put(1, 2.2, 2.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+	Structure['Bond'].Put(1, 1.6, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(1, 3.0, 0, -5.0, 0, 0, 0, 0, 0);
+$Signal1 - 20;
+	Structure['Beacon0'].Put0(1, 0, 0); // P直下地上子
+$Signal1 - 85;
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子
+$Signal1 - 180;
+	Structure['Beacon'].Put0(1, 0, 0); // P更新地上子
+
+3410;
+// 踏切
+	Structure['CrMediumL'].Put0(0, 1, 6);
+	Structure['CrMediumR'].Put0(1, 1, 6);
+	Structure['BoardMedium'].Put0(0, 1, 6);
+	Structure['BoardMediumC'].PutBetween(0, 1);
+	Structure['BoardMedium'].Put0(1, 1, 6);
+	Structure['BoxLarge'].Put(1, 4.0, 0, -5.0, 0, 0, 0, 0, 0);
+	JointNoise.Play($Crossing);
+
+3430;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LRarmless');
+	Structure['Warning5'].Put(1, 1.9, 4.8, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+	Structure['SigPole'].Put(1, 1.9, 0, 0, 0, 0, 0, 0, 0); // 信号柱
+
+3430.8;
+	SpeedLimit.Begin(60);
+	Curve.Change(468);
+	Track[1].X.Interpolate(4.05, -468);
+	Structure['Limit60'].Put(0, -2.0, 0, 0, 0, 0, 0, 0, 0);
+
+3450;
+	Gradient.Interpolate();
+	Track['Ground'].Y.Interpolate();
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L');
+	Repeater['Dike1R'].Begin0(1, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+
+3454.5;
+	Gradient.Interpolate(-1.5);
+
+3460;
+	Curve.Change(0);
+	Track[1].X.Interpolate(3.14, 0);
+	Structure['Warning5'].Put(0, $PoleL, 3.8, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+$Wire = 40;
+	Track['Wire0End'].X.Interpolate(0, 0);
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LRarmless');
+	Repeater['Wire0End'].Begin0('Wire0End', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Wire0'].End();
+
+3480;
+	Track[1].X.Interpolate($Turnout_End_Space, 0);
+	Repeater['Rail0'].End();
+	Repeater['Rail1'].End();
+	JointNoise.Play($Point);
+Distance + $Turnout16_End_Length;
+	Curve.Change($Left * $Turnout16_Lead_Curve);
+	Track[1].X.Interpolate($Turnout16_Lead_Space, $Left * 468);
+Distance + $Turnout16_Lead_Length;
+	SpeedLimit.End();
+	Curve.Change(0);
+	Track[1].X.Interpolate(0, 0);
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L');
+	Repeater['Dike1R'].End();
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+	Structure['Turnout16R-R'].Put(0, 0, 0, 0, 0, 180, 0, 1, -$Turnout16_Length);
+	Structure['PointMotor'].Put(0, 1.6, 0, -1.0, 0, 180, 0, 0, 0);
+	Structure['LimitClear'].Put(0, 2.5, 0, 0, 0, 0, 0, 0, 0); // 速度制限解除標
+
+3500;
+$Wire = 40;
+	Track['Wire0End'].X.Interpolate(0, 0);
+	Repeater['Wire0End'].Begin0('Wire0End', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire);
+	Repeater['Pole1'].End();
+	Structure['Pole10'].PutBetween(0, 1);
+	Structure['CrossarmR'].Put(1, 0, 0, -0.1, 0, 0, 0, 0, 0);
+	Repeater['Wire1'].Begin0(1, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Pole0'].End();
+
+3540;
+$Wire = 40;
+	Track['Wire0End'].X.Interpolate($PoleR, 0);
+	Repeater['Wire0End'].End();
+	Structure['WireAnchorEnd'].Put0('Wire0End', 0, 0);
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10');
+	Repeater['Pole0Crossarm'].Begin0(0, 0, $Wire, $Wire, 'CrossarmR');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['Pole1'].End();
+	Repeater['Pole1Crossarm'].End();
+	Repeater['Wire1'].End();
+
+3550;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'EJoint0');
+Distance + 5;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+	RollingNoise.Change($Ballast);
+
+3600;
+	Gradient.Interpolate();
+
+3625.5;
+	Gradient.Interpolate(-10.0);
+
+3620;
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RA', 'Pole10RB');
+	Repeater['Pole0Crossarm'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+$Signal1 = Distance;
+// 反対側場内信号機
+	Structure['SigPole'].Put(0, 2.2, 0, 0, 0, 180, 0, 0, 0);
+	Structure['SignalBack'].Put(0, 2.2, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(0, 3.0, 0, 3.0, 0, 0, 0, 0, 0);
+	Structure['Bond'].Put(0, 1.6, 0, 0, 0, 0, 0, 0, 0);
+	JointNoise.Play($InsulatorJoint);
+$Signal1 + 25;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子
+$Signal1 + 50;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal1 + 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal1 + 130;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal1 + 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal1 + 280;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+
+3650;
+	Track['Ground'].Y.Interpolate(-1.2, 0);
+
+3680;
+// 人道踏切
+	Structure['CrPeopleL'].Put0(0, 1, 6);
+	Structure['CrPeopleR'].Put0(0, 1, 6);
+	Structure['BoardPeople'].Put0(0, 1, 6);
+	Structure['BoxLarge'].Put(0, 4.0, 0, 5.0, 0, 0, 0, 0, 0);
+
+3700;
+	Track['Ground'].Y.Interpolate(0, 0);
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+	Track['Berm0L'].Position(-5.2, -0.11); // 自線左側犬走り
+	Repeater['Berm0L'].Begin0('Berm0L', 1, 5, 5, 'WallFenceR');  // 自線左側犬走り
+	Track['Trench0L'].Position(-6.2 - 1.0, 0); // 自線左側切土
+	Repeater['Trench0L'].Begin0('Trench0L', 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R'); // 自線左側切土法面
+	Repeater['GroundL'].Begin0('Trench0L', 1, 25, 25, 'GrassL');
+Distance + 20;
+	Track['Berm0L'].Position(-5.2, 0.24); // 自線左側犬走り
+Distance + 5;
+	Track['Berm0L'].Position(-5.2, 0.25); // 自線左側犬走り
+3740;
+	Structure['PowerOn'].Put(0, $PoleR, 0, 0, 0, 0, 0, 0, 0); // 力行標
+// エアジョイントここから
+	Track['Joint0'].X.Interpolate($PoleR, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'WireBalancerStart' + $Wire);
+	Structure['WireAnchorStart'].Put0('Joint0',0, 0);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0.15, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'Wire' + $Wire);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0, 0);
+	Track['Wire0'].X.Interpolate(-0.15, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire);
+Distance + $Wire;
+// エアジョイント
+	Track['Wire0'].X.Interpolate($PoleL, 0);
+	Repeater['Wire0'].End();
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LAarmless', 'Pole10LBarmless');
+	Repeater['Pole0Feeder'].Begin0(0, 0, $Wire, $Wire, 'FeederL');
+	Structure['WireAnchorEnd'].Put0('Wire0', 0, 0);
+Distance + $Wire;
+// エアジョイントここまで
+	Track['Joint0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+3770;
+// 曲線 R1400 TCLa30 CCL20 TCLb30 C0
+	Curve.Interpolate(0, 0);
+
+3780;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10RL');
+
+3800;
+	Curve.Interpolate(-1800, -45 / 1000);
+
+3820;
+	Curve.Interpolate();
+
+3850;
+	Curve.Interpolate(0, 0);
+
+3900;
+	Gradient.Interpolate();
+	Track['Trench0L'].Position(-10.1 - 1.0, -1.2 + 3.125 * 1.5); // 自線左側切土法面
+// 反対側中継信号機
+	Structure['RepeaterBack'].Put(0, 1.9, 4.2, 0, 0, 0, 0, 0, 0); // 中継信号機(裏)
+	Structure['SigPole'].Put(0, 1.9, 0, 0, 0, 180, 0, 0, 0);
+
+3921;
+	Gradient.Interpolate(-3.0);
+
+3980;
+	Structure['Call3'].Put(0, $PoleL, 0, 0, 0, 0, 0, 0, 0); // 歓呼標
+
+4000;
+	Structure['SigPole'].Put(0, 2.5, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Warning5Back'].Put(0, 2.5, 4.8, 0, 0, 0, 0, 0, 0);
+
+4100;
+	Repeater['Crack0L'].Begin0(0, 1, 25, 25, '25CrackBallastL');
+	Structure['SigPole'].Put(0, 2.2, 0, 0, 0, 180, 0, 0, 0);
+	Structure['Warning5Back'].Put(0, 2.2, 4.8, 0, 0, 0, 0, 0, 0);
+
+4120;
+	Track['Trench0L'].Position(-13.5 - 1.0, 6.5); // 自線左側切土法面
+
+4120;
+	Track['Berm0L'].Position(-5.2, 0.25); // 自線左側犬走り
+Distance + 5;
+	Track['Berm0L'].Position(-5.2, -0.1); // 自線左側犬走り
+	Repeater['Berm0L'].End();
+
+4155;
+// オーバーパス影ここから
+	CabIlluminance.Interpolate(1.0);
+	Structure['BallastShadowStart'].Put0(0, 3, 5);
+	Structure['GroundShadowStart'].Put0('Ground', 1, 5);
+	Structure['CrackBallastShadowLStart'].Put0(0, 1, 5);
+	Structure['DikeShadowRStart'].Put0('Trench0L', 1, 5);
+Distance + 5;
+// オーバーパス本体
+	CabIlluminance.Interpolate(0.8);
+	Repeater['Rail0Shadow'].Begin0(0, 3, 5, 5, 'BallastShadow');
+	Repeater['GroundShadow'].Begin0('Ground', 3, 5, 5, 'GroundShadow');
+	Repeater['CrackLShadow'].Begin0(0, 1, 5, 5, 'CrackBallastShadowL');
+	Repeater['Trench0LShadow'].Begin0('Trench0L', 3, 5, 5, 'DikeShadowR');
+	Structure['Overpass'].Put(0, -6.0, -1.0, 0, 0, 0, 0, 1, 10); // 橋桁本体(奥行き9.6メートル)
+	Structure['OverpassR'].Put(0, -6.0, -1.0, 0, 0, 0, 0, 1, 10);
+	Structure['OverpassFence'].Put(0, 0, -1.0, 0, 0, 0, 0, 1, 10);
+	Structure['OverpassDikeL'].Put(0, -4.0, -1.0, 0, 0, 0, 0, 1, 0);
+	Structure['OverpassPier'].Put(0, 10, -0.5, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 3, -0.5, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 5, -0.5, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 7, -0.5, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 9, -0.5, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 11, -0.5, 0, 0, 0, 0, 0, 0);
+	Structure['OverpassPier'].Put(0, 10 * 13, -0.5, 0, 0, 0, 0, 0, 0);
+Distance + 10;
+	Structure['OverpassFence'].Put(0, 0, -1.0, 0, 0, 0, 0, 1, 10);
+Distance + 5;
+	CabIlluminance.Interpolate();
+	Repeater['Rail0Shadow'].End();
+	Repeater['GroundShadow'].End();
+	Repeater['CrackLShadow'].End();
+	Repeater['Trench0LShadow'].End();
+	Structure['BallastShadowEnd'].Put0(0, 3, 5);
+	Structure['GroundShadowEnd'].Put0('Ground', 1, 5);
+	Structure['CrackBallastShadowLEnd'].Put0(0, 1, 5);
+	Structure['DikeShadowREnd'].Put0('Trench0L', 1, 5);
+Distance + 5;
+// オーバーパス影ここまで
+	CabIlluminance.Interpolate(1.0);
+
+4180;
+	Structure['PowerOff'].Put(0, $PoleL, 0, 0, 0, 0, 0, 0, 0);
+
+4200;
+	Repeater['GroundL'].End();
+
+4350;
+	Track['Trench0L'].Position(-13.5 - 1.0, 6.5); // 左側切土
+	Track['Trench0R'].Position(6.1, 0); // 右側切土
+	Repeater['Trench0R'].Begin0('Trench0R', 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L'); // 右側切土法面
+	Repeater['GroundR'].Begin0('Trench0R', 1, 25, 25, 'GrassR');
+
+4430;
+	Gradient.Interpolate();
+
+4439;
+	Gradient.Interpolate(0);
+
+4530;
+// 自線閉塞信号機・反対側閉塞信号機
+$Signal0 = Distance;
+	Signal['Signal3'].Put(1, 0, 2.2, 3.8, 0, 0, 0, 0, 0, 0);
+	Section.Begin(0, 2, 4);
+	Structure['SignalBack'].Put(0, 2.2, 4.2, 0, 0, 0, 0, 0, 0);
+	Structure['SigPole'].Put(0, 2.2, -0.25, 0, 0, 0, 0, 0, 0);
+	Structure['Block3'].Put(0, 2.2, 0, 0, 0, 0, 0, 0, 0);
+	Structure['BoxShort'].Put(0, 2.85, 0, -3.0, 0, -90, 0, 0, 0);
+	Structure['Bond'].Put(0, 1.6, 0, 0, 0, 0, 0, 0, 0);
+	JointNoise.Play($InsulatorJoint);
+$Signal0 - 30;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子
+$Signal0 - 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal0 - 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal0 + 30;
+	Structure['Beacon0'].Put0(0, 0, 0); // P直下地上子
+$Signal0 + 85;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+$Signal0 + 180;
+	Structure['Beacon'].Put0(0, 0, 0); // P更新地上子
+
+4600;
+	Track['Trench0L'].Position(-13.4, 6.5); // 左側切土
+	Track['Trench0R'].Position(13.4, 6.5); // 右側切土
+	Repeater['Crack0L'].End();
+	Repeater['GroundR'].Begin0(0, 1, 25, 25, 'GrassR');
+
+4620;
+	Track['Trench0R'].Position(3.8 + 13.4, 6.5); // 右側切土
+
+4625;
+// オーバーパス影ここから
+	CabIlluminance.Interpolate(1.0);
+	Structure['BallastShadowStart'].Put0(0, 3, 5);
+	Structure['GroundShadowStart'].Put0('Ground', 1, 5);
+	Structure['DikeShadowRStart'].Put0('Trench0L', 1, 5);
+	Structure['DikeShadowLStart'].Put0('Trench0R', 1, 5);
+Distance + 5;
+// オーバーパス本体
+	CabIlluminance.Interpolate(0.8);
+	Repeater['Rail0Shadow'].Begin0(0, 3, 5, 5, 'BallastShadow');
+	Repeater['GroundShadow'].Begin0('Ground', 3, 5, 5, 'GroundShadow');
+	Repeater['Trench0LShadow'].Begin0('Trench0L', 3, 5, 5, 'DikeShadowR');
+	Repeater['Trench0RShadow'].Begin0('Trench0R', 3, 5, 5, 'DikeShadowL');
+	Structure['Overpass'].Put(0, -7.5, -1.0, 0, 0, 0, 0, 1, 10); // 橋桁本体(奥行き9.6メートル)
+	Structure['Overpass'].Put(0, 7.5, -1.0, 0, 0, 0, 0, 1, 10);
+	Structure['OverpassFence'].Put(0, 0, -1.0, 0, 0, 0, 0, 1, 10);
+	Structure['OverpassDikeL'].Put(0, -1.0, -1.0, 0, 0, 0, 0, 1, 0);
+	Structure['OverpassDikeR'].Put(0, 3.8 + 1.0, -1.0, 0, 0, 0, 0, 1, 0);
+Distance + 10;
+	Structure['OverpassFence'].Put(0, 0, -1.0, 0, 0, 0, 0, 1, 10);
+Distance + 5;
+	CabIlluminance.Interpolate();
+	Repeater['Rail0Shadow'].End();
+	Repeater['GroundShadow'].End();
+	Repeater['Trench0LShadow'].End();
+	Repeater['Trench0RShadow'].End();
+	Structure['BallastShadowEnd'].Put0(0, 3, 5);
+	Structure['GroundShadowEnd'].Put0('Ground', 1, 5);
+	Structure['DikeShadowREnd'].Put0('Trench0L', 1, 5);
+	Structure['DikeShadowLEnd'].Put0('Trench0R', 1, 5);
+Distance + 5;
+// オーバーパス影ここまで
+	CabIlluminance.Interpolate(1.0);
+
+4655;
+	Track['Trench0R'].Position(3.8 + 13.4, 6.5); // 右側切土
+
+4660;
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LAarmless', 'Pole10LBarmless');
+	Repeater['Pole0Feeder'].Begin0(0, 0, $Wire, $Wire, 'FeederL');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+4675;
+	Track['Trench0R'].Position(13.4, 6.5); // 右側切土
+	Repeater['GroundR'].End();
+
+4710;
+// エアセクションここから
+	Track['Joint0'].X.Interpolate($PoleL, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'WireBalancerStart' + $Wire);
+	Structure['WireAnchorStart'].Put0('Joint0',0, 0);
+Distance + $Wire;
+// エアセクション
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10');
+	Track['Joint0'].X.Interpolate(0.15 * 2, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Structure['WireSection'].Put(0, 1.0, 5.95, 0, 0, 0, 0, 0, 0); // 電車線区分標
+Distance + $Wire;
+// エアセクション
+	Track['Joint0'].X.Interpolate(0, 0);
+	Track['Wire0'].X.Interpolate(-0.15 * 2, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire);
+	Repeater['InSection'].Begin(0, $PoleL, 3.0, 0, 0, 0, 0, 0, $Wire, $Wire, 'InSection'); // セクションゾーン表示標
+Distance + $Wire;
+// エアセクション
+	Track['Wire0'].X.Interpolate($PoleL, 0);
+$Wire = 40;
+	Repeater['Wire0'].End();
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LAarmless', 'Pole10LBarmless');
+	Repeater['Pole0Feeder'].Begin0(0, 0, $Wire, $Wire, 'FeederL');
+	Structure['WireAnchorEnd'].Put0('Wire0', 0, 0);
+	Repeater['InSection'].Begin(0, $PoleL, 3.0, 0, 0, 0, 0, 0, $Wire, $Wire, 'InSection');
+Distance + $Wire;
+// エアセクションここまで
+	Track['Joint0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+4950;
+	Gradient.Interpolate();
+Distance + 9;
+	Gradient.Interpolate(3);
+
+4975;
+	Track['Trench0L'].Position(-13.4, 6.5); // 左側切土
+	Track['Trench0R'].Position(13.4, 6.5); // 右側切土
+	Repeater['GroundR'].Begin0(0, 1, 25, 25, 'GrassR');
+
+4980;
+	Curve.Interpolate(0, 0);
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LLarmless');
+
+5010;
+	Curve.Interpolate(-2000, - 35 / 1000);
+
+5020;
+	Repeater['InSection'].End();
+	Structure['SectionClear'].Put(0, $PoleL, 3.0, 0, 0, 0 ,0 , 0, 0); // セクション外停止位置標
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LLarmless');
+	Repeater['Pole0Feeder'].Begin0(0, 0, $Wire, $Wire, 'FeederL');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+5030;
+	Curve.Interpolate();
+
+5060;
+	Curve.Interpolate(0, 0);
+
+5090;
+	Gradient.Interpolate();
+Distance + 9;
+	Gradient.Interpolate(0);
+
+5100;
+	Track['Trench0L'].Position(-8.9, 2.5); // 左側切土
+	Track['Trench0R'].Position((3.8 + 8.9), 2.5); // 右側切土
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'EJoint0'); // 自線用伸縮継目
+Distance + 5;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
+
+5120;
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LA', 'Pole10LB');
+	Repeater['Pole0Feeder'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+5125;
+	Track['Ground'].Y.Interpolate(0, 0);
+	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL');
+	Repeater['GroundR'].Begin0('Ground', 1, 25, 25, 'GrassR');
+	Track['Trench0L'].Position(-6.1, 0); // 左側切土
+	Track['Trench0R'].Position((3.8 + 6.1), 0); // 右側切土
+	Repeater['Trench0L'].End();
+	Repeater['Trench0R'].End();
+	Repeater['Wall0L'].Begin0(0, 1, 5, 5, 'WallL');
+	Repeater['Wall0R'].Begin0(0, 1, 5, 5, 'WallR');
+
+5150;
+	Track['Ground'].Y.Interpolate(-5.0, 0);
+
+5155;
+	Track['0L'].X.Interpolate(0, 0);
+	Track['0R'].X.Interpolate(0, 0);
+	Repeater['Wall0L'].Begin0('0L', 1, 5, 5, 'WallL');
+	Repeater['Wall0R'].Begin0('0R', 1, 5, 5, 'WallR');
+
+5165;
+	Track['0L'].X.Interpolate(-0.75, 0);
+	Track['0R'].X.Interpolate(0.75, 0);
+
+5170;
+	Track['0L'].X.Interpolate(-1.1, 0);
+	Track['0R'].X.Interpolate(1.1, 0);
+	Repeater['Wall0L'].Begin(0, 1.0, 0, 0, 0, 0, 0, 1, 5, 5, 'BridgeHighL'); // コンクリート製下路式橋梁
+	Repeater['Wall0R'].Begin(0, -1.0, 0, 0, 0, 0, 0,  1, 5, 5, 'BridgeHighR');
+
+5220;
+	Track['0L'].X.Interpolate();
+	Track['0R'].X.Interpolate();
+	Repeater['Wall0L'].Begin0('0L', 1, 5, 5, 'WallL');
+	Repeater['Wall0R'].Begin0('0R', 1, 5, 5, 'WallR');
+
+5225;
+	Track['0L'].X.Interpolate(-0.75, 0);
+	Track['0R'].X.Interpolate(0.75, 0);
+
+5235;
+	Track['0L'].X.Interpolate(0, 0);
+	Track['0R'].X.Interpolate(0, 0);
+	Repeater['Wall0L'].Begin0(0, 1, 5, 5, 'WallL');
+	Repeater['Wall0R'].Begin0(0, 1, 5, 5, 'WallR');
+
+5250;
+	Gradient.Interpolate();
+	Track['Ground'].Y.Interpolate(-5.0, 0);
+Distance + 37.5;
+	Gradient.Interpolate(-12.5);
+
+5270;
+$Wire = 35;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LA', 'Pole10LB');
+	Repeater['Pole0Feeder'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+5375;
+	Repeater['Wall0L'].End();
+	Repeater['Wall0R'].End();
+	Repeater['Dike0L'].Begin0(0, 1, 5, 5, 'Dike01L', 'Dike02L', 'Dike03L', 'Dike04L', 'Dike05L');
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+
+5420;
+	Structure['Warning5'].Put(0, 2.0, 4.8, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+	Structure['SigPole'].Put(0, 2.0, 0, 0, 0, 0, 0, 0, 0); // 信号柱
+
+5450;
+	Gradient.Interpolate();
+	Track['Ground'].Y.Interpolate(0, 0);
+	Repeater['Dike0L'].End();
+	Repeater['Dike0R'].End();
+Distance + 22.5;
+	Gradient.Interpolate(-5);
+
+5480;
+$Wire = 45;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LR');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+5500;
+	Curve.Interpolate(0, 0);
+Distance + 65;
+	Curve.Interpolate(600, 85 / 1000);
+
+5525;
+$Wire = 30;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LR');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+5585;
+	Structure['Warning5'].Put(0, $PoleL, 3.8, 0, 0, 0, 0, 0, 0); // 特発(5灯)
+
+5680;
+	Curve.Interpolate();
+Distance + 65;
+	Curve.Interpolate(0, 0);
+
+5705;
+	Structure['Approaching'].Put(0, $PoleL, 0, 0, 0, 0, 0, 0, 0); // 停車場接近標
+// エアジョイントここから
+	Track['Joint0'].X.Interpolate($PoleL, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Repeater['JointWire0'].Begin0('Joint0', 1, $Wire, $Wire, 'Wire' + $Wire);
+	Structure['WireAnchorStart'].Put0('Joint0',0, 0);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0.15, 0);
+	Track['Wire0'].X.Interpolate(0, 0);
+Distance + $Wire;
+// エアジョイント
+	Track['Joint0'].X.Interpolate(0, 0);
+	Track['Wire0'].X.Interpolate(-0.15, 0);
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LA', 'Pole10LB');
+	Repeater['Wire0'].Begin0('Wire0', 1, $Wire, $Wire, 'WireBalancerEnd' + $Wire);
+Distance + $Wire;
+// エアジョイント
+	Track['Wire0'].X.Interpolate($PoleL, 0);
+	Repeater['Wire0'].End();
+	Structure['WireAnchorEnd'].Put0('Wire0', 0, 0);
+Distance + $Wire;
+// エアジョイントここまで
+	Track['Joint0'].X.Interpolate(0, 0);
+	Repeater['JointWire0'].End();
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+
+5780;
+// 踏切
+	Structure['CrMediumL'].Put0(0, 1, 6);
+	Structure['CrMediumR'].Put0(0, 1, 6);
+	Structure['BoardMedium'].Put0(0, 1, 6);
+	Structure['BoxLarge'].Put(0, -4.0, 0, -5.0, 0, 0, 0, 0, 0);
+	JointNoise.Play($Crossing);
+
+5820;
+	Curve.Interpolate(0, 0);
+Distance + 20;
+	Curve.Interpolate(-6000, -10 / 1000);
+
+5820;
+	Gradient.Interpolate();
+Distance + 16.5;
+	Gradient.Interpolate(0.5);
+
+5825;
+	Track['GroundR'].Y.Interpolate(0, 0);
+	Repeater['GroundR'].Begin0('GroundR', 1, 25, 25, 'GrassR');
+	Repeater['Dike0R'].Begin0(0, 1, 5, 5, 'Dike01R', 'Dike02R', 'Dike03R', 'Dike04R', 'Dike05R');
+
+5850;
+	Track['GroundR'].Y.Interpolate(-0.5, 0);
+
+5860;
+	Curve.Interpolate();
+Distance + 20;
+	Curve.Interpolate(0, 0);
+
+5885;
+$Wire = 50;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Structure['Warning2'].Put(0, $PoleR, 2.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+
+5900;
+// 駅
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallLS');
+	Repeater['RailShadow0'].Begin0(0, 1, 5, 5, 'StationBallastShadowL');
+	Repeater['Platform0Shadow'].Begin0(0, 1, 5, 5, 'PlatformLShadow');
+	Structure['PlatformLStart'].Put0(0, 1, 5);
+	Structure['PlatformCLStartS'].Put0(0, 1, 5);
+	Structure['PlatformCLShadowS'].Put0(0, 1, 5); // PlatformCLStart/End系ストラクチャに影付きストラクチャが無いので上屋を設けたいときはここだけ影ストラクチャを配置
+	Structure['FenceStepStartL'].Put0(0, 1, 0);
+	Structure['PlatformEndFenceLS'].Put0(0, 1, 0);
+// 上屋
+	Repeater['RoofPillar0'].Begin0(3, 1, 10, 10, 'RoofPillarL'); // 柱
+	Repeater['Roof0'].Begin0(0, 1, 10, 10, 'RoofLS'); // 屋根
+Distance + 5;
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformL');
+	Repeater['PlatformC0'].Begin0(0, 1, 5, 5, 'PlatformCL11S', 'PlatformCL12S', 'PlatformCL13S', 'PlatformCL14S', 'PlatformCL15S'); // プラットホーム
+	Repeater['DoorGuide0'].Begin(0, 0, 0, 2.5, 0, 0, 0, 1, 5, 5, 'DoorGuideL'); // 乗車位置案内
+	Structure['StopBackR'].Put0(0, 0, 0); // 反対側停止位置目標
+
+5985;
+	Repeater['Pole0'].Begin(0, -3.8, 0, 0, 0, 0, 0, 0, $Wire, $Wire, 'Pole20');
+
+5990;
+// プラットホーム幅変形
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallL');
+	Structure['PlatformWalltoSL'].Put0(0, 1, 0);
+	Repeater['PlatformC0'].Begin0(0, 1, 5, 5, 'PlatformCL11', 'PlatformCL12', 'PlatformCL13', 'PlatformCL14', 'PlatformCL15'); // プラットホーム
+	Repeater['Roof0'].Begin0(0, 1, 10, 10, 'RoofL'); // 屋根
+	Repeater['RoofPillar0L'].Begin(0, -4.2, 0, 0, 0, 0, 0, 1, 10, 10, 'RoofPillarL'); // 柱(2列目)
+
+6000;
+	Repeater['GroundL'].Begin('Ground', -7.0, 0, 0, 0, 0, 0, 1, 25, 25, 'GrassL'); // 階段による地面のチラ見え防止
+
+6020;
+	Repeater['PlatformC0'].End();
+	Structure['DownStairsExitL'].Put0(0, 1, 0);
+Distance + 10;
+	Repeater['PlatformC0'].Begin0(0, 1, 5, 5, 'PlatformCL11', 'PlatformCL12', 'PlatformCL13', 'PlatformCL14', 'PlatformCL15'); // プラットホーム
+
+6050;
+	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL'); // 地面の位置を戻した
+
+6070;
+	Structure['Warning2'].Put(0, -2.4, 3.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)
+
+6100;
+	Repeater['RoofPillar0'].End();
+	Repeater['RoofPillar0L'].End();
+	Structure['RoofPillarL'].Put(0, 0, 0, -0.05, 0, 0, 0, 1, 10); // 柱が駅先の柵より奥に描画されるのを防ぐために少し手前に設置
+	Structure['RoofPillarL'].Put(0, -4.2, 0, -0.05, 0, 0, 0, 1, 10);
+
+6105;
+	Station['StationC'].Put($Right, $StopUnder, $StopOver);
+	Structure['StopR'].Put0(0, 0, 0); // 停止位置目標
+	Repeater['DoorGuide0'].End();
+	Repeater['Platform0'].End();
+	Repeater['PlatformC0'].End();
+	Structure['PlatformLEnd'].Put0(0, 1, 5);
+	Structure['PlatformCLEnd'].Put0(0, 1, 5);
+	Structure['PlatformCLShadow'].Put0(0, 1, 5);
+
+6110;
+	Repeater['Roof0'].End();
+	Repeater['PlatformWall0'].End();
+	Repeater['RailShadow0'].End();
+	Repeater['Platform0Shadow'].End();
+	Structure['FenceStepEndL'].Put0(0, 1, 0);
+	Structure['PlatformEndFenceL'].Put0(0, 1, 0);
+
+6135;
+$Wire = 40;
+	Repeater['Pole0'].Begin0(0, 0, $Wire, $Wire, 'Pole10LA', 'Pole10LB');
+	Repeater['Wire0'].Begin0(0, 1, $Wire, $Wire, 'Wire' + $Wire);
+	Structure['Warning2'].Put(0, $PoleL + 0.2, 2.5, 0, 0, 0, 0, 0, 0); // 特発(2灯)

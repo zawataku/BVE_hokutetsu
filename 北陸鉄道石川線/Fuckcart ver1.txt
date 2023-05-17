@@ -1,0 +1,14 @@
+BveTs Scenario 2.00
+
+Vehicle = RouteKit\Vehicle\Vehicle.txt
+VehicleTitle = 試験車両
+Image = 
+
+Title = 路線制作キット
+;Route = RouteKit\Map.txt
+Route = RouteKit\MapSample.txt
+
+RouteTitle = 試1910M
+
+Author = 路線作者 / 作者X　車両作者 / 作者X
+Comment = 路線制作キットサンプル路線20191005

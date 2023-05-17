@@ -1,0 +1,94 @@
+BveTs Vehicle Parameters 2.01:UTF-8
+;E233系6000番台8両編成
+FirstCar = T
+LoadCompensating = True
+
+[Dynamics]
+MotorcarWeight = 32100
+TrailerWeight = 29325
+MotorcarCount = 4
+TrailerCount = 4
+;車両長さm/両
+CarLength = 20
+
+[OneLeverCab]
+BrakeNotchCount = 8
+PowerNotchCount = 5
+HoldingSpeedNotchCount = 0
+HoldingSpeedBrake = false
+AtsCancelNotch = 1
+MotorBrakeNotch = 1
+ReverserText = 後, 切, 前
+BrakeText = 切, B1, B2, B3, B4, B5, B6, B7, B8, 非常
+PowerText = 切, P1, P2, P3, P4, P5
+
+[ConstantSpeedControl]
+Power = 3
+Neutral = 2
+Brake = 0
+
+[MainCircuit]
+LeverDelay = 0.6
+RegenerationLimit = 0.05
+RegenerationStartLimit = 0.1
+BrakePriority = True
+
+[PowerReAdhesion]
+SlipVelocity = 5
+SlipAcceleration = 5
+BalanceAcceleration = -1
+HoldingTime = 0.5
+ReferenceAcceleration = 2
+ReferenceDeceleration = 5
+CurrentIncrease = 200
+CurrentDecrease = 200
+
+[Ecb]
+LeverDelay = 0.8
+MaximumPressure = 360000
+PressureRates = 0, 0.13, 0.25, 0.38,0.5,0.63, 0.75, 0.88, 1, 1
+
+[AirSupplement]
+MaximumPressure = 360000
+InitialPressure = 39960
+RegenerationLimit = 1
+ShoeFriction =0.2
+
+[BcServo]
+ApplySpeed = 450
+ReleaseSpeed = 600
+
+[Brake]
+PistonArea = 0.8
+ShoeFriction = 0.27, 0.01, 0.02
+
+[BrakeReAdhesion]
+SlipVelocity = 0.5
+SlipDeceleration = 5
+BalanceDeceleration = -2
+HoldingTime = 0.5
+ReferenceDeceleration = 5
+BcReleaseSpeed = 100
+BcApplySpeed = 100
+
+[Compressor]
+LowerPressure = 780000
+UpperPressure = 880000
+CompressionSpeed = 4000
+
+[Passengers]
+Capacity = 155.5
+BodyWeight = 55
+;乗車速度人/s
+BoardingSpeed = 2
+;降車速度人/s
+AlightingSpeed = 3
+
+[Door]
+;閉まるまでの時間
+CloseTime = 4.3
+
+[ViewPoint]
+X = -0.7
+Y = 2.8
+Z = -1.15

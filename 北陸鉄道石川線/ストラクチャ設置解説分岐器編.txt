@@ -1,0 +1,109 @@
+●ストラクチャ設置構文例
+構文の詳細については、
+BveTrainsim公式サイト Edit Route & Train - ファイル書式( http://bvets.net/jp/edit/formats/ ) 
+
+▼分岐線の離れ具合について
+Distance;
+	Repeater['Rail0'].End(); // レールストラクチャ終了
+	Structure['Turnout12R-S'].Put0(0, 1, $Turnout10_Length); // 分岐器ストラクチャ本体
+Distance + $Turnout12_Length;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+	Track[1].X.Interpolate($Turnout_End_Space, 0);
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+Distance + 25;
+	Track[1].X.Interpolate($Turnout_End_Space + 25 * 1 / 12, 0);
+Distance + 50;
+	Track[1].X.Interpolate($Turnout_End_Space + 25 / 12 + 50 / 12, 0);
+↑基本的に分岐線は分岐器ストラクチャの終点からの長さに、1 / 分岐器番数を掛けると分岐線が分岐後も直進するように他線を設定できる。
+
+Distance;
+	Repeater['Rail0'].End(); // レールストラクチャ終了
+	Structure['Turnout12R-S'].Put0(0, 1, $Turnout10_Length); // 分岐器ストラクチャ本体
+	Track[1].X.Interpolate(0, 0);
+Distance + $Turnout12_Head_Length;
+	Track[1].X.Interpolate(0, $Turnout12_Lead_Curve);
+Distance + $Turnout12_Lead_Length;
+	Track[1].X.Interpolate($Turnout12_Lead_Space, 0);
+Distance + $Turnout12_End_Length;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+	Track[1].X.Interpolate($Turnout_End_Space, 0);
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+Distance + 25;
+	Track[1].X.Interpolate($Turnout_End_Space + 25 * 1 / 12, 0);
+
+↑TrackKeyが1の他線トラックをきちんと分岐線に沿わせる設定にするときの例。他列車を通したいときに使う。
+
+
+▼自線が基準線側を通過するときの片渡り線の設置
+
+Distance;
+	Repeater['Rail0'].End(); // レールストラクチャ終了
+	Structure['Turnout10R-S'].Put0(0, 1, $Turnout10_Length); // 分岐器ストラクチャ本体
+Distance + $Turnout10_Length;
+	Repeater['Rail1'].End(); // レールストラクチャ終了
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+Distance + $Turnout10_Length;
+	Structure['Turnout10R-S'].Put(1, 0, 0, 0, 0, 180, 0, 1, -$Turnout10_Length); // 分岐器ストラクチャ本体
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+
+↑まず、TrakKeyが1の他線が右側に3.8メートルの位置にあることを前提として、この設置例では自線から他線へ移る片渡りになる。このように分岐線の他線を引かずとも渡り線が設置できることが最大のメリット。Turnout10をTurnout8やTurnout16とすれば対応する番数での渡り線を設置できる。
+
+Distance;
+	Repeater['Rail1'].End(); // レールストラクチャ終了
+	Structure['Turnout8L-S'].Put0(1, 1, $Turnout8_Length); // 分岐器ストラクチャ本体
+Distance + $Turnout8_Length;
+	Repeater['Rail0'].End(); // レールストラクチャ終了
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+Distance + $Turnout8_Length;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+	Structure['Turnout8L-S'].Put(0, 0, 0, 0, 0, 180, 0, 1, -$Turnout8_Length); // 分岐器ストラクチャ本体
+
+↑先の例とは逆に他線から自線へ移る片渡り。
+
+
+▼自線が分岐線側を通過するときの片渡り線の設置
+Constant.txtに長々記載してる定数はほぼ自線分岐線を実現するためのもの。
+長さ方向では、分岐器前端、リード部、クロッシング部＆分岐器後端の3つに分かれていて、各番数毎に、TurnoutN_Head_Length、TurnoutN_Lead_Length、TurnoutN_End_Lengthとそれぞれ設定している。
+TurnoutN_Length = TurnoutN_Head_Length + TurnoutN_Lead_Length + TurnoutN_End_Lengthでもある。これらの長さは片開き両開き共に同じ。
+リード曲線半径については、TurnoutN_Lead_Curve、両開きの場合でTurnoutNY_Lead_Curveにそれぞれ設定済み。
+
+また、リード曲線の終点における2線間の開き幅は、TurnoutN_Lead_Space、両開きの場合でTurnoutNY_Lead_Spaceに設定済み。これは基準線側にある他線トラックを、リード曲線終了部でもきちんと線路ストラクチャ上に設定するために必要なもので、他列車を通過させない場合は省略可能。
+分岐器終端部における2線間の開き幅は、Turnout_End_Space、両開きの場合でTurnoutY_End_Spaceで設定していて、どの番数の分岐器でも共通。
+
+さて、文章より設置例を見てコピー＆ペーストしたほうが早い。
+
+Distance;
+  Repeater['RailJoin0'].Begin0('Join0', 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // デモ用線路ストラクチャ
+
+	Repeater['Rail0'].End(); // レールストラクチャ終了
+	Track['Branch0'].X.Interpolate(0, 0); // 自線から分岐する基準線側トラック(自線は分岐線側へ)
+	Structure['Turnout16R-R'].Put0('Branch0', 1, $Turnout16_Length); // 分岐器ストラクチャ本体
+	Track['Join0'].X.Interpolate(3.8, 0); // 自線が合流する基準線側トラック
+Distance + $Turnout16_Head_Length;
+	Curve.Change($Turnout16_Lead_Curve);
+	Track['Branch0'].X.Interpolate(0, -$Turnout16_Lead_Curve);
+	Track['Join0'].X.Interpolate(3.8, -$Turnout16_Lead_Curve);
+Distance + $Turnout16_Lead_Length;
+	Curve.Change(0);
+	Track['Branch0'].X.Interpolate($Left * $Turnout16_Lead_Space, 0);
+	Track['Join0'].X.Interpolate(3.8 - $Turnout16_Lead_Space, 0);
+Distance + $Turnout16_End_Length;
+	Track['Branch0'].X.Interpolate($Left * $Turnout_End_Space, 0);
+	Repeater['RailBranch0'].Begin0('Branch0', 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+	Track['Join0'].X.Interpolate(3.8 - $Turnout_End_Space, 0);
+	Repeater['RailJoin0'].End();
+Distance + $Turnout16_End_Length;
+	Curve.Change($Left * $Turnout16_Lead_Curve);
+	Track['Branch0'].X.Interpolate($Left * $Turnout_End_Space + $Left * $Turnout16_End_Length / 16, $Turnout16_Lead_Curve);
+	Track['Join0'].X.Interpolate($Turnout16_Lead_Space, $Turnout16_Lead_Curve);
+Distance + $Turnout16_Lead_Length;
+	Curve.Change(0);
+	Track['Branch0'].X.Interpolate($Left * $Turnout_End_Space + $Left * ($Turnout16_End_Length +  $Turnout16_Lead_Length) / 16 + $Turnout16_Lead_Space, 0);
+	Track['Join0'].X.Interpolate(0, 0);
+Distance + $Turnout16_Head_Length;
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ開始
+	Track['Branch0'].X.Interpolate(-3.8, 0);
+	Track['Join0'].X.Interpolate(0, 0);
+	Structure['Turnout16R-R'].Put('Join0', 0, 0, 0, 0, 180, 0, 1, -$Turnout16_Length); // 分岐器ストラクチャ本体
+
+↑Branch0は自線から離れていく線路、Join0は自線に合流する線路。

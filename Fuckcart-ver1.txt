@@ -1,0 +1,14 @@
+BveTs Scenario 2.00
+
+Vehicle = hokutetsu7100_data/hokutetsu_7100.txt
+VehicleTitle = 北陸鉄道7100系
+Image = 
+
+Title = 路線制作キット
+Route = 北陸鉄道石川線/Map.txt
+;Route = RouteKit\MapSample.txt
+
+RouteTitle = 試1910M
+
+Author = 路線作者 / 作者X　車両作者 / 作者X
+Comment = 路線制作キットサンプル路線20191005
