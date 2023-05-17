@@ -1,0 +1,96 @@
+BveTs Map 2.02
+
+// 走行音(Run)
+// バラスト軌道
+	// ロングレール
+	$Ballast = 0;
+	// 標準レール
+	$Ballast25 = 2;
+// スラブ軌道
+	$Slab = 1;
+// 無道床軌道
+	$Girder = 3;
+// トンネル
+	$Tunnel = 4;
+
+// 分岐器通過音(Joint)
+// 標準
+	$Point = 0;
+// 踏切敷板通過音(Joint)
+//	$Crossing = 5;
+// 絶縁継目通過音(Joint)
+//	$InsulatorJoint = 10;
+// 普通継目通過音(Joint)
+//	$Joint = 11;
+
+// フランジ音(Flange)
+	$Flange = 0;
+
+// 信号許容制限
+$SigLimitYY = 25; // 警戒
+$SigLimitY = 55; // 注意
+$SigLimitYG = 75; // 減速
+$SigLimitG = 95; // 進行
+
+// 停目前方許容距離(m)
+$StopUnder = -5;
+// 停目後方許容距離(m)
+$StopOver = 5;
+
+Structure.Load('Structure\StructureList.csv');
+Signal.Load('SignalList.csv');
+Signal.SpeedLimit(0, $SigLimitYY, $SigLimitY, $SigLimitYG, $SigLimitG);
+Sound.Load('Sound\SoundList.csv');
+Sound3D.Load('Sound\Sound3DList.csv');
+Station.Load('StationListSample.csv');
+//Station.Load('StationList.csv');
+
+0;
+// 背景
+	Background.Change('Background');
+
+// 定数ファイル
+Include 'MapConstant.txt';
+
+// 基本線路設定
+$Gauge = 1067 / 1000; // 軌間
+	Curve.SetGauge($Gauge);
+	Curve.SetCenter($Gauge / 2);
+	Curve.SetFunction(1);
+	Track[1].Cant.SetGauge($Gauge);
+	Track[1].Cant.SetCenter($Gauge / 2);
+	Track[1].Cant.SetFunction(1);
+
+// 環境
+	Fog.Interpolate(0.002, 1, 1, 1); // 遠景に霧
+	Light.Ambient(0.98, 0.95, 0.98);
+	Light.Diffuse(0.5, 0.5, 0.5);
+	Light.Direction(70, 30);
+
+// 粘着
+//	Adhesion.Change(0.35, 0, 0.01); // 乾燥
+	Adhesion.Change(0.32, 0, 0.0095); // 晴れ
+//	Adhesion.Change(0.24, 0, 0.015); // 雨
+
+// 軌道整備精度
+//	Irregularity.Change(0.0008, 0.0005, 0.0003, 50, 50, 50); // 優
+	Irregularity.Change(0.0015, 0.001, 0.001, 50, 50, 50); // 良
+//	Irregularity.Change(0.002, 0.00126, 0.0008, 50, 50, 50); // 並
+//	Irregularity.Change(0.0032, 0.002, 0.00125, 50, 50, 50); // 可
+//	Irregularity.Change(0.005, 0.00315, 0.001987516, 50, 50, 50); // 劣
+
+// 閉塞
+	Section.Begin(0, 1, 2, 3, 4);
+
+// 地面
+	Track['Ground'].Y.Interpolate(0, 0);
+	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL');
+	Repeater['GroundR'].Begin0('Ground', 1, 25, 25, 'GrassR');
+// 軌道
+	Track[1].X.Interpolate(3.8);
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01'); // レールストラクチャ
+
+1000;
+	Station['StationA'].Put($Left, $StopUnder, $StopOver);
+

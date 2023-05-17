@@ -1,0 +1,79 @@
+BveTs Vehicle Sound 3.00:UTF-8
+
+[Run]
+# 0:バラストロング / 1:スラブ / 2: バラスト25m / 3:橋梁無道床 / 4:トンネルスラブ
+0 = RollingNoise\BallastLong.wav
+1 = RollingNoise\Slab.wav
+2 = RollingNoise\Ballast25.wav
+3 = RollingNoise\Bridge.wav
+4 = RollingNoise\Tunnel.wav
+
+[Flange]
+0 = Flange.wav
+
+[Joint]
+# ポイント通過
+0 = JointNoise\Point.wav
+
+# 踏切
+5 = JointNoise\Crossing.wav
+
+# 絶縁継ぎ目
+10 = JointNoise\IJoint.wav
+
+# 普通継ぎ目
+11 = JointNoise\Joint.wav
+
+[Brake]
+BcReleaseHigh = Air.wav
+BcRelease = Air.wav
+BcReleaseFull = AirZero.wav
+
+[AirSpring]
+LeftRelease = SpringRelease.wav
+RightRelease = SpringRelease.wav
+LeftApply = SpringApply.wav
+RightApply = SpringApply.wav
+
+[Horn]
+Primary = HornE.wav
+Secondary = HornA.wav
+
+[Door]
+OpenLeft = DoorOpenL.wav
+OpenRight = DoorOpenR.wav
+CloseLeft = DoorCloseL.wav
+CloseRight = DoorCloseR.wav 
+
+[Ats]
+2 = P.wav
+
+#Ats6:停通通過音声
+#6 = Approaching.wav
+#Ats7:停通停車音声
+#7 = Passing.wav
+
+[Brake Handle]
+Apply = Handle.wav
+ApplyFast = Handle.wav
+Release = Handle.wav
+ReleaseFast = Handle.wav
+Min = Handle.wav
+Max = Handle.wav
+
+[Master Controller]
+Up = Handle.wav
+UpFast = Handle.wav
+Down = Handle.wav
+DownFast = Handle.wav
+Max = Handle.wav
+Min = Handle.wav
+
+
+[Reverser]
+On =  Lever.wav
+Off =  Lever.wav
+
+[Others]
+Noise = Noise.wav
+Shoe = Rub.wav

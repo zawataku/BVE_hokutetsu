@@ -1,0 +1,125 @@
+●ストラクチャ設置構文例
+構文の詳細については、
+BveTrainsim公式サイト Edit Route & Train - ファイル書式( http://bvets.net/jp/edit/formats/ ) 
+
+
+
+▼駅ストラクチャの設置 - 島式ホームをつくる
+
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformR'); // ホーム縁
+	Repeater['Platform1'].Begin0(1, 1, 5, 5, 'PlatformL'); // ホーム縁
+	Structure['PlatformCR01'].PutBetween(0, 1); // ホーム中央部
+
+Distance + 5;
+	Structure['PlatformCR02'].PutBetween(0, 1); // ホーム中央部
+
+Distance + 5;
+	Structure['PlatformCR03'].PutBetween(0, 1); // ホーム中央部
+
+Distance + 5;
+	Structure['PlatformCR04'].PutBetween(0, 1); // ホーム中央部
+
+Distance + 5;
+	Structure['PlatformCR05'].PutBetween(0, 1); // ホーム中央部
+
+以下繰り返し
+
+↑PlatformC系ストラクチャは01から05で1巡し、島式の場合はPutbetweenを使う関係で5メートルごとに設置構文を必要とする。
+
+▼駅ストラクチャの設置 - 島式ホームに屋根をつける
+
+	Repeater['Platform0Shadow'].Begin0(0, 1, 5, 5, 'PlatformRShadow'); // ホーム縁の影
+	Repeater['Platform1Shadow'].Begin0(1, 1, 5, 5, 'PlatformLShadow'); // ホーム縁の影
+	Structure['PlatformCR11'].PutBetween(0, 1); // ホーム中央部
+	Repeater['RoofPillar0'].Begin0(0, 1, 5, 5, 'RoofPillarR'); // ホーム屋根柱
+	Repeater['RoofPillar1'].Begin0(1, 1, 5, 5, 'RoofPillarL'); // ホーム屋根柱
+	Structure['IslandRoofR'].PutBetween(0, 1); // ホーム屋根
+
+Distance + 5;
+	Structure['PlatformCR12'].PutBetween(0, 1); // ホーム中央部
+
+Distance + 5;
+	Structure['PlatformCR13'].PutBetween(0, 1); // ホーム中央部
+	Structure['IslandRoofR'].PutBetween(0, 1); // ホーム屋根
+
+↑PlatformRShadowは既設のホーム縁ストラクチャに影のかかったストラクチャを被せるものなのでRepeaterKeyは別にすること。見栄えはそこまで変わるものではないので無くても良い。
+ホーム中央部はPlatformCR0xをPlatformCR1xとすることで影のかかったストラクチャになる。
+ホーム中央部ストラクチャが5メートル単位なのに対して、ホーム屋根ストラクチャは10メートル単位。
+
+▼駅ストラクチャ - 島式ホーム用の駅端フェンスをつける
+	Structure['FenceStepStartR'].Put0(0, 1, 0); // 関係者用ステップ
+	Structure['FenceStepStartL'].Put0(1, 1, 0); // 関係者用ステップ
+	Structure['PlatformEndFenceR'].PutBetween(0, 1); // 駅端フェンス
+
+↑島式ホーム駅始点での駅先端フェンス設置例
+
+	Structure['FenceStepEndR'].Put0(0, 1, 0); // 関係者用ステップ
+	Structure['FenceStepEndL'].Put0(1, 1, 0); // 関係者用ステップ
+	Structure['PlatformEndFenceR'].PutBetween(0, 1); // 駅端フェンス
+
+↑島式ホーム駅終点での駅先端フェンス設置例
+
+
+
+▼駅ストラクチャ - 単式ホームをつける
+
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformL'); // ホーム縁
+	Repeater['Platform0C'].Begin0(0, 1, 5, 5, 'PlatformCL01', 'PlatformCL02', 'PlatformCL03', 'PlatformCL04', 'PlatformCL05'); // ホーム中央部(標準幅)
+
+↑自線の左側に単式ホームを設置した例。ホーム幅は7メートルを想定。ホーム中央部もRepeaterで置けるのでスッキリする。
+例によって'PlatformCL01', … , 'PlatformCL05'を'PlatformCL11', … , 'PlatformCL15'にすれば影付きホームになる。
+
+
+▼駅ストラクチャ - 単式ホームに屋根をつける
+
+	Repeater['RoofPillar0'].Begin0(0, 1, 10, 10, 'RoofPillarL'); // ホーム屋根柱
+	Repeater['Roof0'].Begin0(0, 1, 10, 10, 'RoofL'); // ホーム屋根(標準幅)
+
+↑標準幅ホームに対応した屋根
+
+▼駅ストラクチャ - 単式ホームをつける2
+
+	Repeater['Platform0'].Begin0(0, 1, 5, 5, 'PlatformL'); // ホーム縁
+	Repeater['Platform0C'].Begin0(0, 1, 5, 5, 'PlatformCL01S', 'PlatformCL02S', 'PlatformCL03S', 'PlatformCL04S', 'PlatformCL05S'); // ホーム中央部(幅狭)
+
+↑ホーム中央部ストラクチャの幅狭タイプを設置した例。ホーム幅は5メートルを想定。
+こちらも'PlatformCL11S', … , 'PlatformCL15S'とすることで影付きにできる。
+
+▼駅ストラクチャ - 単式ホームに屋根をつける2
+
+	Repeater['RoofPillar0'].Begin0(0, 1, 10, 10, 'RoofPillarL'); // ホーム屋根柱
+	Repeater['Roof0'].Begin0(0, 1, 10, 10, 'RoofLS'); // ホーム屋根(幅狭)
+
+↑幅狭ホームに対応した屋根
+
+▼駅ストラクチャ - 単式ホーム用の駅端フェンスをつける
+	Structure['FenceStepStartL'].Put0(0, 1, 0); // 関係者用ステップ
+	Structure['PlatformEndFenceL'].Put(0, 1, 0); // 駅端フェンス
+
+↑単式ホーム駅始点での駅先端フェンス設置例
+
+	Structure['FenceStepEndL'].Put0(0, 1, 0); // 関係者用ステップ
+	Structure['PlatformEndFenceL'].Put(0, 1, 0); // 駅端フェンス
+
+↑単式ホーム駅終点での駅先端フェンス設置例
+
+▼駅ストラクチャ - 単式ホーム用、線路と反対端のフェンス
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallL'); // ホームフェンス(標準幅)
+
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallLS'); // ホームフェンス(幅狭)
+
+↑標準幅ホーム、幅狭ホームに対応するフェンス
+
+Distance;
+	Repeater['Platform0C'].Begin0(0, 1, 5, 5, 'PlatformCL01', 'PlatformCL02', 'PlatformCL03', 'PlatformCL04', 'PlatformCL05'); // ホーム中央部(標準幅)
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallL'); // ホームフェンス(標準幅)
+
+Distance + 5;
+	Repeater['Platform0C'].Begin0(0, 1, 5, 5, 'PlatformCL01S', 'PlatformCL02S', 'PlatformCL03S', 'PlatformCL04S', 'PlatformCL05S'); // ホーム中央部(標準幅)
+	Repeater['PlatformWall0'].Begin0(0, 1, 5, 5, 'PlatformWallLS'); // ホームフェンス(幅狭)
+	Structure['PlatformWalltoSL'].Put0(0, 1, 0); // ホーム幅切り替わり箇所フェンス
+
+↑ホーム幅が変わる場所に対応するフェンスの設置例
+
+駅舎ストラクチャについては、階段部はどれも全長10メートルで単式標準幅プラットホームの場合はそのままPutで設置できる。
+島式ホームの場合はPutbetweenで設置する。

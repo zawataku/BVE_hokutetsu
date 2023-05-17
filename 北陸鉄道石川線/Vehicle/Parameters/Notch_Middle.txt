@@ -1,0 +1,14 @@
+[Power]
+Force = Power_Middle\Force.csv
+MaxForce = Power_Middle\ForceMax.csv
+Current = Power_Middle\Current.csv
+MaxCurrent = Power_Middle\CurrentMax.csv
+NoLoadCurrent = Power_Middle\Current0.csv
+Params = Power_Middle\Params.csv
+
+[Brake]
+Force = Regular\Brake\Force.csv
+Current = Regular\Brake\Current.csv
+MaxCurrent = Regular\Brake\CurrentMax.csv
+NoLoadCurrent = Regular\Brake\Current0.csv
+Params = Regular\Brake\Params.csv

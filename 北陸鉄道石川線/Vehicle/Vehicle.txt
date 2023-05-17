@@ -1,0 +1,7 @@
+BveTs Vehicle 1.00:UTF-8
+;E233系6000番台
+PerformanceCurve = Parameters\Notch.txt
+Parameters = Parameters\Parameters.txt
+Panel = Panel\Panel.txt
+Sound = Sounds\Sounds_Tc.txt
+Ats = Ats.dll

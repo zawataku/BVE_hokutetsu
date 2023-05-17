@@ -1,0 +1,14 @@
+BveTs Vehicle Performance Table 2.00:UTF-8
+#項目,1N,2N,3N,4N,5N
+BreakerDelay_On,0.25,0.25,0.25,0.25,0.25
+BreakerDelay_Off,0.25,0.25,0.25,0.25,0.25
+ResetTime,0,0,0,0,0
+CurrentReducingTime,0,0.8,0.8,0.8,0.8
+JerkRegulation_Up,0,114,126,138,150
+JerkRegulation_Down,0,171,189,207,225
+RequiredNotch_Up,2,3,4,5,6
+RequiredNotch_Down,0,0,0,0,0
+StepDelay_Up,0,0,0,0,0
+StepDelay_Down,0,0,0,0,0
+CurrentLimitingValue_Empty,0,0,0,0,0
+CurrentLimitingValue_Full,0,0,0,0,0

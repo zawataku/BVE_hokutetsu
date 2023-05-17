@@ -1,0 +1,302 @@
+BveTs Instrument Panel 2.00:UTF-8
+;2048 x 1024版
+
+;8両ステッカー
+[PilotLamp]
+Subject = True
+Location = 776, 711
+DaytimeImage = 8Cars_D.png
+NighttimeImage = 8Cars_N.png
+Layer = 10
+
+;P回収済ステッカー
+[PilotLamp]
+Subject = True
+Location = 994,688
+DaytimeImage = ATSLabel_D.png
+NighttimeImage = ATSLabel_N.png
+Layer = 10
+
+[This]
+Resolution = 1200
+Left = 75
+Top = 15
+Right = 1730
+Bottom = 1010
+DaytimeImage = Panel_D.png
+NighttimeImage = Panel_N.png
+Center = 778, 500
+Origin = 778, 480
+
+;知らせ灯
+[PilotLamp]
+Subject = door
+Location = 682, 803
+DaytimeImage = PLOn_D.png
+NighttimeImage = PLOn_N.png
+Layer = 10
+
+;速度計
+[Needle]
+Subject = ats16
+Location = 488, 864
+DaytimeImage = Needle_Spd.png
+NighttimeImage = Needle_Spd.png
+Origin = 8, 62
+Layer = 10
+Radius = 45
+InitialAngle = -126
+LastAngle = 125
+Minimum = 0
+Maximum = 140
+NaturalFreq = 0
+
+[DigitalNumber]
+Subject = kmphd0
+Location = 484, 882
+DaytimeImage = Num_Spd.png
+Layer =10
+Interval = 32
+
+[DigitalNumber]
+Subject = kmphd1
+Location = 468, 882
+DaytimeImage = Num_Spd.png
+Layer =10
+Interval = 32
+
+[DigitalNumber]
+Subject = kmphd2
+Location = 452, 882
+DaytimeImage = Num_Spd.png
+Layer =10
+Interval = 32
+
+;ブレーキ表示灯
+[DigitalNumber]
+Subject = brake
+Location = 282,789
+DaytimeImage = Brake.png
+Layer = 10
+Interval = 131
+
+;BC圧力計カバー
+[PilotLamp]
+Subject = True
+Location = 306, 768
+DaytimeImage = BCCover_D.png
+NighttimeImage = BCCover_N.png
+Layer = 9
+
+;BC圧力計バー
+[Needle]
+Subject = ats15
+Location = 4515, 927
+DaytimeImage = BC.png
+Origin = 16, 2000
+Layer = 8
+Radius = 4200
+InitialAngle = -91.25
+LastAngle = -89.725
+Minimum = 0
+Maximum = 800
+NaturalFreq = 0
+
+;BC圧力計針
+[Needle]
+Subject = ats15
+Location = 9416, 847
+DaytimeImage = Needle_BC.png
+Origin = 8, 10000
+Layer = 11
+Radius = 9100
+InitialAngle = -90.425
+LastAngle = -89.75
+Minimum = 0
+Maximum = 800
+NaturalFreq = 0
+
+;MR圧力計針
+[Needle]
+Subject = mr
+Location = 6873, 879
+DaytimeImage = Needle_MR.png
+Origin = 8, 8500
+Layer = 10
+Radius = 6500
+InitialAngle = -90.35
+LastAngle = -89.3275
+Minimum = 700
+Maximum = 1000
+NaturalFreq = 0
+
+;低圧電圧計(固定)
+[Needle]
+Subject = True
+Location = 316, 759
+DaytimeImage = Needle_Spd.png
+Origin = 8, 62
+Layer = 10
+Radius = 24
+InitialAngle = 14
+LastAngle = 14
+NaturalFreq = 0
+
+;高圧電圧計(電流値連動)
+[Needle]
+Subject = am
+Location = 399, 759
+DaytimeImage = Needle_Spd.png
+Origin = 8, 62
+Layer = 10
+Radius = 24
+InitialAngle = 31
+LastAngle = 42
+Minimum = 800
+Maximum = 0
+NaturalFreq = 0
+
+;時針
+[Needle]
+Subject = hour
+Location = 715, 937
+DaytimeImage = Watch\Hour.png
+Origin =  32, 61
+Layer = 9
+Radius = 16
+InitialAngle = 0
+LastAngle = 360
+Minimum = 0
+Maximum = 12
+NaturalFreq = 0
+DampingRatio = 0
+
+;時針影
+[Needle]
+Subject = hour
+Location = 716, 937
+DaytimeImage = Watch\HourS.png
+NighttimeImage = Watch\Night.png
+Origin =  32, 61
+Layer = 9
+Radius = 16
+InitialAngle = 0
+LastAngle = 360
+Minimum = 0
+Maximum = 12
+NaturalFreq = 0
+DampingRatio = 0
+
+;分針
+[Needle]
+Subject = min
+Location = 715, 937
+DaytimeImage = Watch\Min.png
+Origin =  32, 61
+Layer = 9
+Radius = 23
+InitialAngle = 0
+LastAngle = 360
+Minimum = 0
+Maximum = 60
+NaturalFreq = 0
+
+;分針影
+[Needle]
+Subject = min
+Location = 716, 937
+DaytimeImage = Watch\MinS.png
+NighttimeImage = Watch\Night.png
+Origin =  32, 61
+Layer = 9
+Radius = 23
+InitialAngle = 0
+LastAngle = 360
+Minimum = 0
+Maximum = 60
+NaturalFreq = 0
+
+;秒針
+[Needle]
+Subject = sec
+Location = 715, 937
+DaytimeImage = Watch\SecD.png
+NighttimeImage = Watch\SecN.png
+Origin =  32, 61
+Layer = 10
+Radius = 23
+InitialAngle = 0
+LastAngle = 360
+Minimum = 0
+Maximum = 60
+NaturalFreq = 120
+DampingRatio = 0.5
+
+;秒針影
+[Needle]
+Subject = sec
+Location = 717, 938
+DaytimeImage = Watch\SecS.png
+NighttimeImage = Watch\Night.png
+Origin =  32, 61
+Layer = 10
+Radius = 23
+InitialAngle = 0
+LastAngle = 360
+Minimum = 0
+Maximum = 60
+NaturalFreq = 120
+DampingRatio = 0.5
+
+;EB表示灯
+;[PilotLamp]
+;Subject = ats8
+;Location = 1570, 956
+;DaytimeImage = EBOn_D.png
+;NighttimeImage = EBOn_N.png
+;Layer = 10
+
+;定速表示灯
+[PilotLamp]
+Subject = csc
+Location = 522, 713
+DaytimeImage = Cruise.png
+Layer = 10
+
+;抑速表示灯
+[PilotLamp]
+Subject = ats9
+Location = 281, 801
+DaytimeImage = Holding.png
+Layer = 11
+
+;保安表示灯
+[PilotLamp]
+Subject = True
+Location = 944, 722
+DaytimeImage = PPower.png
+Layer = 10
+
+[PilotLamp]
+Subject = ats3
+Location = 976, 722
+DaytimeImage = PApproach.png
+Layer = 10
+
+[PilotLamp]
+Subject = ats4
+Location = 1009, 722
+DaytimeImage = PBrake.png
+Layer = 10
+
+[PilotLamp]
+Subject = ats5
+Location = 1042, 722
+DaytimeImage = PEmergency.png
+Layer = 10
+
+[PilotLamp]
+Subject = ats6
+Location = 1108, 722
+DaytimeImage = P.png
+Layer = 10
