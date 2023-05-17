@@ -16,7 +16,8 @@
 ### OriginalData
 OriginalDataは[zawataku](https://github.com/zawataku)が制作したものです。<br>
 **著作権は[zawataku](https://github.com/zawataku)にあり、クリエイティブコモンズ ライセンスを適用します。**<br>
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a> この 作品 は <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際 ライセンス</a>の下に提供されています。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a> この 作品 は <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際 ライセンス</a>の下に提供されています。<br>
+
 
 ### ExternalData
 ExternalDataは他作者からお借りしているデータです。お借りしているデータは以下の通りです。<br>
@@ -25,7 +26,8 @@ ExternalDataは他作者からお借りしているデータです。お借り�
 **ExternalDataの著作権は[zawataku](https://github.com/zawataku)にはありません。**<br>
 
 ### 二次利用、再配布について
-**私的利用の範囲内**(著作権法第30条に定められた範囲内)であれば改造は自由です。改造したデータを第三者に配布したり、インターネット上に公開したりすることは禁止です。<br>
+**OriginalData** ：CCライセンスに準じます。ただし可能な限り、改造品など再配布の際はご連絡ください。<br>
+**ExternalData** ：それぞれの原著作者様の規定に準じます。必ず原著作者へご連絡の上、許諾を得てください。<br>
 **改造は自己責任**です。改造による損失は当方は一切責任を負いません。<br>
 
 ## お問い合わせ
