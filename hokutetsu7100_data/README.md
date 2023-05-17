@@ -16,9 +16,7 @@
 ### OriginalData
 OriginalDataは[zawataku](https://github.com/zawataku)が制作したものです。<br>
 **著作権は[zawataku](https://github.com/zawataku)にあり、クリエイティブコモンズ ライセンスを適用します。**<br>
-<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.ja">
-  <img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a>
-  OriginalData は <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">クリエイティブ・コモンズ 表示 - 非営利 - 改変禁止 4.0 国際 ライセンス</a>の下に提供されています。<br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="クリエイティブ・コモンズ・ライセンス" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a> この 作品 は <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">クリエイティブ・コモンズ 表示 - 非営利 4.0 国際 ライセンス</a>の下に提供されています。
 
 ### ExternalData
 ExternalDataは他作者からお借りしているデータです。お借りしているデータは以下の通りです。<br>
