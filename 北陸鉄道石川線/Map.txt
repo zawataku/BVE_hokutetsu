@@ -28,9 +28,9 @@ BveTs Map 2.02
 
 // 信号許容制限
 $SigLimitYY = 25; // 警戒
-$SigLimitY = 55; // 注意
-$SigLimitYG = 75; // 減速
-$SigLimitG = 95; // 進行
+$SigLimitY = 45; // 注意
+$SigLimitYG = 65; // 減速
+$SigLimitG = 75; // 進行
 
 // 停目前方許容距離(m)
 $StopUnder = -5;
@@ -90,7 +90,47 @@ $Gauge = 1067 / 1000; // 軌間
 	Track[1].X.Interpolate(3.8);
 	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ
 	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01'); // レールストラクチャ
+0;
+// 地面
+	Track['Ground'].Position(0, 0);
+	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL');
+	Repeater['GroundR'].Begin0('Ground', 1, 25, 25, 'GrassR');
+// 軌道
+	Track[1].X.Interpolate(3.8); // 右に線路ストラクチャを置くためのトラック
+	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ
+	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01'); // レールストラクチャ
 
-1000;
-	Station['StationA'].Put($Left, $StopUnder, $StopOver);
 
+800; //野町駅2番線
+
+830; //野町駅1番線　BCC右R300m(CCL=50m)
+
+861; //下9.9‰(/L)
+
+880; //ECC(R300),BCC右R195m(CCL=20m)
+
+900; //ECC(R195),BCC右R180m(CCL=157,C=47,S=25制限30km/h)
+
+1057; //ECC(R180)
+
+1230; //下3.8‰(/9.9‰)
+
+1469; //下4.8‰(/3.8‰)
+
+1800; //西泉駅
+
+1900; //Level(/4.8‰)
+
+1956; //BCC左R400m(C=75,S=10)
+
+2023; //ECC(R400)
+
+2225; //上11.0‰(/L)
+
+2253; //BTC(TCL15m)
+
+2268; //ETC,BCC右R2000m(CCL=15,TCL=15,C=30,S=0)
+
+2283; //ECC,BTC(R2000)
+	
+2298; //ETC(TCL15m)
