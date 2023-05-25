@@ -42,8 +42,8 @@ Signal.Load('SignalList.csv');
 Signal.SpeedLimit(0, $SigLimitYY, $SigLimitY, $SigLimitYG, $SigLimitG);
 Sound.Load('Sound\SoundList.csv');
 Sound3D.Load('Sound\Sound3DList.csv');
-Station.Load('StationListSample.csv');
-//Station.Load('StationList.csv');
+//Station.Load('StationListSample.csv');
+Station.Load('StationList.csv');
 
 0;
 // 背景
@@ -102,58 +102,93 @@ $Gauge = 1067 / 1000; // 軌間
 
 
 800; //野町駅2番線
-
-830; //野町駅1番線　BCC右R300m(CCL=50m)
-
+    
+830; //野町駅1番線　BCC右R1000m(CCL=50m)
+    Curve.Begin(1000);
+    Station.Load('I01');
+    
+850;
+	Station['I01'].Put(-1,0,0);
+	Gradient.BeginTransition();
+    
 861; //下9.9‰(/L)
-
+    Gradient.Begin(-9.9);
 880; //ECC(R300),BCC右R195m(CCL=20m)
-
+    Curve.Change(195);
 900; //ECC(R195),BCC右R180m(CCL=157,C=47,S=25制限30km/h)
-
+    Curve.Interpolate(180,0.047);
 1057; //ECC(R180)
+    Curve.End();
 
+1225;
+	Gradient.BeginTransition();
 1230; //下3.8‰(/9.9‰)
+    Gradient.Begin(-3.8);
 
+1464;
+	Gradient.BeginTransition();
 1469; //下4.8‰(/3.8‰)
+    Gradient.Begin(-4.8);
 
 1800; //西泉駅
-
+    Station.Load('I02');
+    Station['I02'].Put(-1,0.5,0.5);
+    
+1895;
+	Gradient.BeginTransition();
 1900; //Level(/4.8‰)
+    Gradient.End();
 
+1946;
+	Curve.BeginTransition();
 1956; //BCC左R400m(C=75,S=10)
-
+    Curve.Begin(-400,-0.010);
 2023; //ECC(R400)
+    Curve.BeginTransition();
+2033;
+	Curve.End();
 
+2220;
+	Gradient.BeginTransition();
 2225; //上11.0‰(/L)
+    Gradient.Begin(11.0);
 
 2253; //BTC(TCL15m)
-
+    Curve.BeginTransition();
 2268; //ETC,BCC右R2000m(CCL=15,TCL=15,C=30,S=0)
-
+    Curve.Begin(2000,0.030);
 2283; //ECC,BTC(R2000)
-	
+	Curve.BeginTransition();
 2298; //ETC(TCL15m)
+    Curve.End();
 
+2325;
+	Gradient.BeginTransition();
 2335; //Level(/11.0‰)
+    Gradient.End();
 
 2400; //制限(65)
 
 2379; //BTC(TCL35m)
-
+    Curve.BeginTransition();
 2414; //ETC,BCC右R500m(CCL=35,TCL=35,C=70,S=10)
-
+    Curve.Begin(500,0.070);
+    
+2410;
+	Gradient.BeginTransition();
 2415; //下18‰(/L)
-
+    Gradient.Begin(-18);
 2449; //ECC,BTC(R500)
-
+    Curve.BeginTransition();
 2484; //ETC(TCL35m)
-
+    Curve.End();
 2502; //制限解除
 
 2504; //新西金沢signal(50)
 
 2574; //下3.19‰(/18‰)
+
+2720; //新西金沢分岐
 
 
 
