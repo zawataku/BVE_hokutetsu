@@ -237,6 +237,8 @@ $Signal0 - 280;
 // 付帯曲線ここまで
 
 1100;
+
+
 // 10番分岐ここから
 	Curve.Change(0);
 	Track[1].X.Interpolate($Turnout_End_Space, 0);
@@ -251,6 +253,8 @@ Distance + $Turnout10_Lead_Length;
 	Track[1].X.Interpolate(0, 0);
 Distance + $Turnout10_Head_Length;
 // 10番分岐ここまで
+
+
 	SpeedLimit.End();
 	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
 	Structure['Turnout10R-R'].Put(0, 0, 0, 0, 0, 180, 0, 1, -$Turnout10_Length); // 分岐器ストラクチャ本体

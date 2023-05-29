@@ -1,0 +1,13 @@
+BveTs Scenario 2.00
+
+Vehicle = hokutetsu7100_data/vehicle_7100.txt
+VehicleTitle = 北陸鉄道7100系
+Image = 
+
+Title = RouteTest
+Route = 北陸鉄道石川線\MapSample.txt
+
+RouteTitle = 試1910M
+
+Author = -
+Comment = Test file
