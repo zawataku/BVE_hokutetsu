@@ -34,6 +34,7 @@ Distance + 25;
 ↑TrackKeyが1の他線トラックをきちんと分岐線に沿わせる設定にするときの例。他列車を通したいときに使う。
 
 
+
 ▼自線が基準線側を通過するときの片渡り線の設置
 
 Distance;
@@ -48,6 +49,7 @@ Distance + $Turnout10_Length;
 
 ↑まず、TrakKeyが1の他線が右側に3.8メートルの位置にあることを前提として、この設置例では自線から他線へ移る片渡りになる。このように分岐線の他線を引かずとも渡り線が設置できることが最大のメリット。Turnout10をTurnout8やTurnout16とすれば対応する番数での渡り線を設置できる。
 
+
 Distance;
 	Repeater['Rail1'].End(); // レールストラクチャ終了
 	Structure['Turnout8L-S'].Put0(1, 1, $Turnout8_Length); // 分岐器ストラクチャ本体
@@ -59,6 +61,8 @@ Distance + $Turnout8_Length;
 	Structure['Turnout8L-S'].Put(0, 0, 0, 0, 0, 180, 0, 1, -$Turnout8_Length); // 分岐器ストラクチャ本体
 
 ↑先の例とは逆に他線から自線へ移る片渡り。
+
+
 
 
 ▼自線が分岐線側を通過するときの片渡り線の設置
