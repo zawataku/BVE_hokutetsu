@@ -1,26 +1,26 @@
 BveTs Instrument Panel 2.00
 
 [This]
-Resolution = 2048
-Left = 20
-Top = 20
+Resolution = 1980
+Left = 0
+Top = 0
 Right = 2000
-Bottom = 2000
+Bottom = 1500
 DaytimeImage = panel\panel.png
 TransparentColor = #0000FF
-Center = 920,1065
-Origin = 1257,365
+Center = 989,825
+Origin = 1111,485
 
 [Needle]
 Subject		 = mr
-Location = 1230,1760
+Location = 1492,1323
 DaytimeImage	 = panel\prs_low.png
 Color		 = 999999
 Origin		 = 64, 256
 Layer		 = 8
 Radius		 = 90
-InitialAngle	 = -133
-LastAngle	 = 133
+InitialAngle	 = -150
+LastAngle	 = 135
 Minimum		 = 0
 Maximum		 = 1200
 NaturalFreq	 = 271
@@ -28,14 +28,14 @@ DampingRatio	 = 0.300
 
 [Needle]
 Subject		 = bp
-Location = 1230,1760
+Location = 1492,1323
 DaytimeImage	 = panel\prs_up.png
 Color		 = FFFFFF
 Origin		 = 64, 256
 Layer		 = 9
 Radius		 = 90
-InitialAngle	 = -133
-LastAngle	 = 133
+InitialAngle	 = -150
+LastAngle	 = 135
 Minimum		 = 0
 Maximum		 = 1200
 NaturalFreq	 = 271
@@ -43,14 +43,14 @@ DampingRatio	 = 0.300
 
 [Needle]
 Subject		 = sap
-Location = 1531,1762
+Location = 1250,1325
 DaytimeImage	 = panel\prs_up.png
 Color		 = FFFFFF
 Origin		 = 64, 256
 Layer		 = 9
 Radius		 = 90
-InitialAngle	 = -133
-LastAngle	 = 133
+InitialAngle	 = -143
+LastAngle	 = 140
 Minimum		 = 0
 Maximum		 = 1200
 NaturalFreq	 = 271
@@ -58,14 +58,14 @@ DampingRatio	 = 0.300
 
 [Needle]
 Subject		 = bc
-Location = 1531,1762
+Location = 1250,1325
 DaytimeImage	 = panel\prs_low.png
 Color		 = 999999
 Origin		 = 64, 256
 Layer		 = 8
 Radius		 = 90
-InitialAngle	 = -133
-LastAngle	 = 133
+InitialAngle	 = -143
+LastAngle	 = 140
 Minimum		 = 0
 Maximum		 = 1200
 NaturalFreq	 = 271
@@ -73,15 +73,15 @@ DampingRatio	 = 0.300
 
 [Needle];速度計
 Subject = kmph
-Location = 695,1750
+Location = 821,1324
 DaytimeImage	 = panel\spd.png
 Color		 = 251f1d
 TransparentColor = 000000
 Origin = 124, 485
 Layer = 9
 Radius		 = 90
-InitialAngle = -120
-LastAngle = 120
+InitialAngle = -122
+LastAngle = 110
 Minimum = 0
 Maximum = 140
 NaturalFreq = 6.3
@@ -89,15 +89,15 @@ DampingRatio = 0.5
 
 [Needle];電流計
 Subject = am
-Location = 396, 1750
+Location = 596, 1324
 DaytimeImage	 = panel\spd.png
 Color		 = 251f1d
 TransparentColor = 000000
 Origin = 124, 485
 Layer = 9
-Radius		 = 90
-InitialAngle = 5
-LastAngle = 350
+Radius		 = 80
+InitialAngle = 11
+LastAngle = 260
 Minimum = 0
 Maximum = 600
 NaturalFreq = 6.3
@@ -105,24 +105,24 @@ DampingRatio = 0.5
 
 [PilotLamp]
 Subject = true
-Location = 631,1686
+Location = 757,1260
 DaytimeImage	 = panel\spd_cover.png
 Layer = 10
 
 [PilotLamp]
 Subject = true
-Location = 332, 1686
-DaytimeImage	 = panel\spd_cover.png
+Location = 525, 1260
+DaytimeImage	 = panel\amp_cover.png
 Layer = 10
 
 [PilotLamp]
 Subject = true
-Location = 1219, 1749
+Location = 1482, 1315
 DaytimeImage	 = panel\prs_cover.png
 Layer = 10
 
 [PilotLamp]
 Subject = true
-Location = 1520, 1751
+Location = 1241, 1317
 DaytimeImage	 = panel\prs_cover.png
 Layer = 10
