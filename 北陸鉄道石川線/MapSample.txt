@@ -784,6 +784,7 @@ Distance + $Turnout12_End_Length;
 	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05');
 	Repeater['Rail3'].Begin0(3, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01');
 
+
 2850;
 	Structure['25CrackBallastR'].PutBetween(0, 1); // 線路間用砕石ストラクチャ(右用)
 // 反対側出発信号機(右他線1)

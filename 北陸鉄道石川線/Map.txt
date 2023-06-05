@@ -42,8 +42,8 @@ Signal.Load('SignalList.csv');
 Signal.SpeedLimit(0, $SigLimitYY, $SigLimitY, $SigLimitYG, $SigLimitG);
 Sound.Load('Sound\SoundList.csv');
 Sound3D.Load('Sound\Sound3DList.csv');
-//Station.Load('StationListSample.csv');
-Station.Load('StationList.csv');
+Station.Load('StationListSample.csv');
+//Station.Load('StationList.csv');
 
 0;
 // 背景
@@ -79,8 +79,7 @@ $Gauge = 1067 / 1000; // 軌間
 //	Irregularity.Change(0.0032, 0.002, 0.00125, 50, 50, 50); // 可
 //	Irregularity.Change(0.005, 0.00315, 0.001987516, 50, 50, 50); // 劣
 
-// 閉塞
-	Section.Begin(0, 1, 2, 3, 4);
+
 
 // 地面
 	Track['Ground'].Y.Interpolate(0, 0);
@@ -91,19 +90,25 @@ $Gauge = 1067 / 1000; // 軌間
 	Repeater['Rail0'].Begin0(0, 3, 5, 5, 'Ballast01', 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05'); // レールストラクチャ
 	Repeater['Rail1'].Begin0(1, 3, 5, 5, 'Ballast02', 'Ballast03', 'Ballast04', 'Ballast05', 'Ballast01'); // レールストラクチャ
 
+// 閉塞
+	//Section.Begin(0,2,4);
+	
 0;
 // 地面
 	Track['Ground'].Position(0, 0);
 	Repeater['GroundL'].Begin0('Ground', 1, 25, 25, 'GrassL');
 	Repeater['GroundR'].Begin0('Ground', 1, 25, 25, 'GrassR');
-
-
+	
+	
 800; //野町駅2番線
     
 830; //野町駅1番線　BCC右R1000m(CCL=50m)
     Curve.Begin(1000);
     
 850;
+
+    //Section.Begin(0, 2, 4); // 3灯式信号機用セクション構文
+	//Signal['Signal3'].Put(0, 1, -2.2, 4.2, 0, 0, 0, 0, 0, 0); // 信号本体
 	Station['I01'].Put(-1,0.5,0.5);
 	Gradient.BeginTransition();
     
@@ -126,8 +131,10 @@ $Gauge = 1067 / 1000; // 軌間
 1469; //下4.8‰(/3.8‰)
     Gradient.Begin(-4.8);
 
-1800; //西泉駅
+1870; //西泉駅
+    //Signal['Signal3'].Put(0, 1, -2.2, 4.2, 0, 0, 0, 0, 0, 0); // 信号本体
     Station['I02'].Put(-1,0.5,0.5);
+    
     
 1895;
 	Gradient.BeginTransition();
@@ -201,10 +208,21 @@ $Gauge = 1067 / 1000; // 軌間
 	Curve.End();
 	
 2800;
+	//Section.Begin(0,2,4);
+	//Signal['Signal3'].Put(0, 1, -2.2, 4.2, 0, 0, 0, 0, 0, 0);
 	Station['I03'].Put(1,0.5,0.5);
 	
 	
-    
+	
+	
+3500; //仮設置
+    //Section.Begin(0,2,4);
+    //Signal['Signal3'].Put(0, 1, -2.2, 4.2, 0, 0, 0, 0, 0, 0); // 信号本体
+    Station['I04'].Put(-1,0.5,0.5);
+
+	
+	
+ 
    
       //test_start
 
